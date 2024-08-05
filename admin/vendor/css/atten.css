@@ -1,0 +1,13 @@
+@media only screen and (max-width: 1024px) {
+    body {
+      font-size: 6px; 
+  }
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+  
+    th, td {
+        min-width: 120px;
+    }
+  }

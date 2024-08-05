@@ -1,0 +1,21 @@
+.submit{
+    background-color: red;
+    color:#fff;
+    border-radius: 5px;
+    padding: 5px 15px;
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 1024px) {
+    body {
+      font-size: 20px; 
+  }
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+  
+    th {
+        min-width: 120px;
+    }
+  }

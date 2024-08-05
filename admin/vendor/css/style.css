@@ -1,0 +1,251 @@
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color:#2d8ad3;
+  z-index: 1;
+  height: 80px;
+  padding: 10px;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .add-emp {
+  padding: 10px 20px;
+  background-color: green;
+  border-radius: 4px;
+  border: none;
+  margin-bottom: 10px;
+  display: flex;
+  float: right;
+  margin-right: 22px;
+}
+.add-emp a{
+  color: #fff;
+  text-decoration: none;
+}
+  .logo a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .h2{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 25px;
+    text-align: center;
+    color: #777;
+    padding: 10px 0;
+  }
+  .logo a span {
+    color: #8739fa;
+  }
+  
+  .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .menu a {
+    display: block;
+    padding: 7px 15px;
+    font-size: 17px;
+    font-weight: 500;
+    transition: 0.2s all ease-in-out;
+    color: #fff;
+  }
+  
+  .menu a:hover {
+    color: #000000;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+  }
+  
+  .menu-icon {
+    display: none;
+  }
+  
+.divide{
+  display: flex !important;
+}
+
+.divider{
+  width: 240px !important;
+}
+  
+  table tr:nth-child(odd) {
+    background-color:#fff;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: rgb(234, 234, 234); 
+  }
+   table tr:hover{
+    background-color:orange;
+  } 
+
+  table td{
+    text-align: center;
+  }
+  
+  #menu-toggle {
+    display: none;
+  }
+  
+  #menu-toggle:checked ~ .menu {
+    transform: scale(1, 1);
+  }
+  
+ 
+
+.homeblack:hover{
+	background-color: blue;
+	padding: 30px 10px 21px 10px;
+}
+.Previous {
+  background-color: #f1f1f1;
+  color: black;
+  padding: 5px 15px;
+}
+
+.next {
+  background-color: #04AA6D;
+  color: white;
+  padding: 5px 15px;
+}
+
+#divimg{
+	padding: 20px;
+}
+.mark,
+.view {
+border-radius: 5px;
+background-color: green;
+padding: 3px 15px;
+text-decoration: none;
+color: #fff;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+.contain{
+  padding: 0 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+ th {
+  background-color: #185575;
+  color: white;
+  text-align: center;
+}
+
+.btn--green {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn--green:hover {
+    background-color: darkgreen;
+}
+
+.approve{
+  background-color:green;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 20px;
+  border-radius: 5px;
+}
+.cancel{
+  background-color: red;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 20px;
+  border-radius: 5px;
+}
+
+@media only screen and (max-width: 1024px) {
+  .menu {
+    flex-direction: column;
+    background-color: #151418;
+    align-items: start;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    transform: scale(1, 0);
+    transform-origin: top;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  }
+
+  .menu a {
+    margin-left: 12px;
+  }
+
+  .menu li {
+    margin-bottom: 10px;
+  }
+
+  .menu-icon {
+    display: block;
+    color: #fff;
+    font-size: 35px;
+    padding-right: 20px;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 768px) {
+    table th,
+    table td {
+        font-size: 14px;
+    }
+    table{
+      width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    table th,
+    table td {
+        font-size: 15px;
+    }
+
+    .btn--green {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+  .approve, .cancel {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin: 5px 0;
+  }
+}
+
