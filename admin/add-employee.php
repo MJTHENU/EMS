@@ -10,25 +10,16 @@ if (!isset($_SESSION['a_id'])) {
 // Initialize variables
 $emp_id = $firstname = $lastname = $email = $password = $contact = $address = $gender = $birthday = $role = $qualification = $whatsapp = $status = $type = $img = $salary = '';
 
-// Function to generate unique employee ID
-function generateEmpID($conn) {
-    do {
-        $emp_id = 'EMP' . rand(1000, 9999); // Generate a random ID
-        $result = mysqli_query($conn, "SELECT emp_id FROM employee WHERE emp_id='$emp_id'");
-    } while (mysqli_num_rows($result) > 0);
-    return $emp_id;
-}
-
 // Handle form submission
 if (isset($_POST['add'])) {
-    // Generate unique emp_id
-    $emp_id = generateEmpID($conn);
+    // Generate unique emp_id   
+    $emp_id = uniqid('kc_');
 
     // Sanitize input
     $firstname = trim(mysqli_real_escape_string($conn, $_POST['first_name']));
     $lastname = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
-    $password = trim(mysqli_real_escape_string($conn, $_POST['password']));
+    $password = password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT);
     $birthday = trim(mysqli_real_escape_string($conn, $_POST['date_of_birth']));
     $contact = trim(mysqli_real_escape_string($conn, $_POST['contact']));
     $whatsapp = trim(mysqli_real_escape_string($conn, $_POST['whatsapp_no']));
@@ -38,8 +29,15 @@ if (isset($_POST['add'])) {
     $qualification = trim(mysqli_real_escape_string($conn, $_POST['qualification']));
     $type = trim(mysqli_real_escape_string($conn, $_POST['type']));
     $status = trim(mysqli_real_escape_string($conn, $_POST['status']));
-    $img = trim(mysqli_real_escape_string($conn, $_POST['img']));
     $salary = trim(mysqli_real_escape_string($conn, $_POST['salary']));
+
+    // Handle file upload
+    if (isset($_FILES['img']) && $_FILES['img']['error'] == UPLOAD_ERR_OK) {
+        $img = mysqli_real_escape_string($conn, file_get_contents($_FILES['img']['tmp_name']));
+    } else {
+        echo "<script>alert('Error uploading image');</script>";
+        exit();
+    }
 
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -80,6 +78,7 @@ if (isset($_POST['add'])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,23 +87,51 @@ if (isset($_POST['add'])) {
 </head>
 <style>
 .input--style {
-    width: 100%; /* Make the select box span the full width of its container */
-    padding: 10px; /* Add some padding for better appearance */
-    border: 1px solid #ccc; /* Border styling */
-    border-radius: 4px; /* Rounded corners */
-    font-size: 16px; /* Font size for better readability */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 .input--style option {
-    padding: 10px; /* Add padding inside options for better readability */
+    padding: 10px;
+}
+.input-margin-top {
+    margin-top: 80px;
 }
 .p-t-20 {
-    text-align: center; /* Center-aligns the content within the container */
+    text-align: center;
+}
+.custom-file-input {
+    display: none;
+}
+
+.custom-file-label {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    text-align: center;
+    line-height: 150px;
+    cursor: pointer;
+    margin: 20px;
+    border: 1px solid #ccc;
+}
+
+.custom-file-label img {
+    border-radius: 50%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    display: none;
+    height: 150px;
 }
 
 .btn {
-    display: inline-block; /* Ensure button is treated as inline-block for centering */
+    display: inline-block;
 }
 </style>
 <body>    
@@ -115,14 +142,26 @@ if (isset($_POST['add'])) {
             <div class="card card-1">
                 <div class="card-heading"></div>
                 <div class="card-body">
-                    <h2 class="h2" style="font-family: 'Montserrat', sans-serif; font-size: 25px; text-align: center; color: #777; padding: 10px 0;">Add New Employee</h2>
-                    <form id="registration" action="add-employee.php" method="POST">
-                        <div class="input-group">
-                            <input class="input--style-1" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" required>
+                    <h2 class="h2" style="font-family: 'Montserrat', sans-serif; font-size: 25px; text-align: center; color: #777; padding: 10px;">Add New Employee</h2>
+                    <hr>
+                    <form id="registration" action="add-employee.php" method="POST" enctype="multipart/form-data">
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin: top 20px;">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div>
+                                    <input id="profile" class="custom-file-input" type="file" name="img" accept="image/*" onchange="previewImage(event)">
+                                    <label for="profile" class="custom-file-label">
+                                        <img id="profile-preview" class="image--cover" src="./vendor/images/profile.png" alt="Profile Image Preview">
+                                        <span id="placeholder-text">Upload Profile</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <input class="input--style-1" type="browse" name="img" placeholder="Profile" value="<?php echo htmlspecialchars($img); ?>" required>
-                        </div>
+
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -218,5 +257,19 @@ if (isset($_POST['add'])) {
             </div>
         </div>
     </div>
+    <script>
+function previewImage(event) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var output = document.getElementById('profile-preview');
+        output.src = reader.result;
+        document.getElementById('placeholder-text').style.display = 'none'; // Hide placeholder text when an image is selected
+        output.style.display = 'block'; // Display the preview image
+    }
+    if (event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+    }
+}
+</script>
 </body>
 </html>

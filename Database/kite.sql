@@ -82,7 +82,7 @@ CREATE TABLE `employee` (
   `img` longtext NOT NULL,
   `type` enum('1','2','3','') NOT NULL,  
   `status` enum('active','inactive','') NOT NULL,
-  `salary` decimal(10,2) NULL,
+  `salary` decimal(10,2),
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`emp_id`)
