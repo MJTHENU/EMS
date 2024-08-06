@@ -12,8 +12,19 @@ $emp_id = $firstname = $lastname = $email = $password = $contact = $address = $g
 
 // Handle form submission
 if (isset($_POST['add'])) {
-    // Get input values
-    $emp_id = trim(mysqli_real_escape_string($conn, $_POST['emp_id']));
+    // Generate unique emp_id and ensure it's not already in the database
+    $emp_id = uniqid('kc_');
+
+    // Check if emp_id already exists
+    $check_emp_id_query = "SELECT emp_id FROM employee WHERE emp_id='$emp_id'";
+    $check_emp_id_result = mysqli_query($conn, $check_emp_id_query);
+    while (mysqli_num_rows($check_emp_id_result) > 0) {
+        // Generate a new unique emp_id if the current one is already taken
+        $emp_id = uniqid('kc_');
+        $check_emp_id_result = mysqli_query($conn, $check_emp_id_query);
+    }
+
+    // Sanitize input
     $firstname = trim(mysqli_real_escape_string($conn, $_POST['first_name']));
     $lastname = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
@@ -58,14 +69,6 @@ if (isset($_POST['add'])) {
     $check_email_result = mysqli_query($conn, $check_email_query);
     if (mysqli_num_rows($check_email_result) > 0) {
         echo "<script>alert('Email already exists');</script>";
-        exit();
-    }
-
-    // Check for duplicate emp_id
-    $check_emp_id_query = "SELECT * FROM employee WHERE emp_id='$emp_id'";
-    $check_emp_id_result = mysqli_query($conn, $check_emp_id_query);
-    if (mysqli_num_rows($check_emp_id_result) > 0) {
-        echo "<script>alert('Employee ID already exists');</script>";
         exit();
     }
 
@@ -154,7 +157,7 @@ if (isset($_POST['add'])) {
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin: top 20px;" required>
+                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin: top 20px;">
                                 </div>
                             </div>
                             <div class="col-2">
