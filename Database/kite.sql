@@ -73,17 +73,21 @@ CREATE TABLE `employee` (
   `email` varchar(50) NOT NULL,
   `password` varchar(20) NOT NULL,
   `date_of_birth` date NOT NULL,
-  `gender` enum('male','female','other','') NOT NULL,
-  `contact` varchar(20) NOT NULL,
+  `gender` enum('male','female','') NOT NULL,
+  `contact` int(10) NOT NULL,
+  `whatsapp_no` int(10) NOT NULL,
   `address` varchar(100) NOT NULL,
-  `dept` varchar(50) NOT NULL,
-  `degree` varchar(50) NOT NULL,
+  `role` varchar(50) NOT NULL,
+  `qualification` varchar(50) NOT NULL,
   `img` longtext NOT NULL,
-  `type` enum('1','2','3','') NOT NULL,
+  `type` enum('1','2','3','') NOT NULL,  
+  `status` enum('active','inactive','') NOT NULL,
+  `salary` decimal(10,2) NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
-  `status` enum('active','inactive','','') NOT NULL
+  PRIMARY KEY (`emp_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Dumping data for table `employee`
