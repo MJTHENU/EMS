@@ -233,10 +233,9 @@ if (isset($_POST['add'])) {
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <select class="input--style" name="type" required>
-                                        <option value="1" <?php echo ($type == '1') ? 'selected' : ''; ?>>1</option>
-                                        <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>2</option>
-                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>3</option>
+                                    <select class="input--style" name="type" required>                                       
+                                        <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Employee</option>
+                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>Trianee</option>
                                     </select>
                                 </div>
                             </div>
