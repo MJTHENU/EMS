@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include('vendor/inc/connection.php');
 
@@ -12,12 +12,12 @@ $emp_id = $firstname = $lastname = $email = $password = $contact = $address = $g
 
 // Handle form submission
 if (isset($_POST['add'])) {
-    // Get input values
+    // Get input values and escape for SQL
     $emp_id = trim(mysqli_real_escape_string($conn, $_POST['emp_id']));
     $firstname = trim(mysqli_real_escape_string($conn, $_POST['first_name']));
     $lastname = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
-    $password = password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT);
+    $password = isset($_POST['password']) && !empty(trim($_POST['password'])) ? password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT) : password_hash('kite@123', PASSWORD_BCRYPT);
     $birthday = trim(mysqli_real_escape_string($conn, $_POST['date_of_birth']));
     $contact = trim(mysqli_real_escape_string($conn, $_POST['contact']));
     $whatsapp = trim(mysqli_real_escape_string($conn, $_POST['whatsapp_no']));
@@ -48,6 +48,7 @@ if (isset($_POST['add'])) {
         echo "<script>alert('Contact number must be 10 digits');</script>";
         exit();
     }
+
     if (!preg_match("/^\d{10}$/", $whatsapp)) {
         echo "<script>alert('Whatsapp number must be 10 digits');</script>";
         exit();
@@ -56,6 +57,11 @@ if (isset($_POST['add'])) {
     // Check for duplicate email
     $check_email_query = "SELECT * FROM employee WHERE email='$email'";
     $check_email_result = mysqli_query($conn, $check_email_query);
+
+    if (!$check_email_result) {
+        die("Error checking email: " . mysqli_error($conn));
+    }
+
     if (mysqli_num_rows($check_email_result) > 0) {
         echo "<script>alert('Email already exists');</script>";
         exit();
@@ -64,21 +70,22 @@ if (isset($_POST['add'])) {
     // Check for duplicate emp_id
     $check_emp_id_query = "SELECT * FROM employee WHERE emp_id='$emp_id'";
     $check_emp_id_result = mysqli_query($conn, $check_emp_id_query);
+
+    if (!$check_emp_id_result) {
+        die("Error checking employee ID: " . mysqli_error($conn));
+    }
+
     if (mysqli_num_rows($check_emp_id_result) > 0) {
         echo "<script>alert('Employee ID already exists');</script>";
         exit();
     }
 
-    // Prepare SQL query
+    // Prepare and execute SQL query
     $insert_sql = "INSERT INTO employee (emp_id, first_name, last_name, email, password, date_of_birth, gender, contact, whatsapp_no, address, role, qualification, img, type, status, salary) 
-                    VALUES ('$emp_id', '$firstname', '$lastname', '$email', '$password', '$birthday', '$gender', '$contact', '$whatsapp', '$address', '$role', '$qualification', '$img', '$type', '$status', '$salary')";
+                   VALUES ('$emp_id', '$firstname', '$lastname', '$email', '$password', '$birthday', '$gender', '$contact', '$whatsapp', '$address', '$role', '$qualification', '$img', '$type', '$status', '$salary')";
 
-    // Execute SQL query
     if (mysqli_query($conn, $insert_sql)) {
-        echo ("<script>
-            alert('Successfully Added');
-            window.location.href='viewemp.php';
-            </script>");
+        echo "<script>alert('Successfully Added'); window.location.href='viewemp.php';</script>";
     } else {
         echo "Error adding record: " . mysqli_error($conn);
     }
@@ -140,9 +147,8 @@ if (isset($_POST['add'])) {
     display: inline-block;
 }
 </style>
-<body>    
+<body>
     <?php include('vendor/inc/nav.php'); ?>
-
     <div class="page-wrapper bg-blue p-t-100 p-b-100 font-robo">
         <div class="wrapper wrapper--w680">
             <div class="card card-1">
@@ -154,7 +160,7 @@ if (isset($_POST['add'])) {
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin: top 20px;" required>
+                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin-top: 20px;" required>
                                 </div>
                             </div>
                             <div class="col-2">
@@ -167,7 +173,6 @@ if (isset($_POST['add'])) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -180,11 +185,9 @@ if (isset($_POST['add'])) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <input class="input--style-1" type="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>" required>
                         </div>
-
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -200,7 +203,6 @@ if (isset($_POST['add'])) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -213,7 +215,6 @@ if (isset($_POST['add'])) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <input class="input--style-1" type="text" name="address" placeholder="Address" value="<?php echo htmlspecialchars($address); ?>" required>
                         </div>
@@ -229,17 +230,15 @@ if (isset($_POST['add'])) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <select class="input--style" name="type" required>                                       
+                                    <select class="input--style" name="type" required>
                                         <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Employee</option>
-                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>Trianee</option>
+                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>Trainee</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-2">
                                 <div class="input-group">
                                     <select class="input--style" name="status" required>
@@ -249,11 +248,9 @@ if (isset($_POST['add'])) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <input class="input--style-1" type="text" name="salary" placeholder="Salary" value="<?php echo htmlspecialchars($salary); ?>" required>
                         </div>
-
                         <div class="p-t-20">
                             <button class="btn btn--radius btn--green" type="submit" name="add">Submit</button>
                         </div>
@@ -263,18 +260,18 @@ if (isset($_POST['add'])) {
         </div>
     </div>
     <script>
-function previewImage(event) {
-    var reader = new FileReader();
-    reader.onload = function() {
-        var output = document.getElementById('profile-preview');
-        output.src = reader.result;
-        document.getElementById('placeholder-text').style.display = 'none'; // Hide placeholder text when an image is selected
-        output.style.display = 'block'; // Display the preview image
-    }
-    if (event.target.files[0]) {
-        reader.readAsDataURL(event.target.files[0]);
-    }
-}
-</script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('profile-preview');
+                output.src = reader.result;
+                document.getElementById('placeholder-text').style.display = 'none'; // Hide placeholder text when an image is selected
+                output.style.display = 'block'; // Display the preview image
+            }
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>
