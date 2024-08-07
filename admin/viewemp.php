@@ -17,7 +17,7 @@ $sql = "SELECT
             employee.date_of_birth, 
             employee.gender, 
             employee.contact, 
-            employee.whatsapp_no,  -- Correct column name
+            employee.whatsapp_no, 
             employee.address, 
             employee.role,  
             employee.qualification,  
@@ -54,7 +54,7 @@ if (!$result) {
             <th align="center">Date Of Birth</th>
             <th align="center">Gender</th>
             <th align="center">Contact</th>
-            <th align="center">WhatsApp No</th> <!-- Updated header -->
+            <th align="center">WhatsApp No</th>
             <th align="center">Address</th>
             <th align="center">Role</th>
             <th align="center">Qualification</th>
@@ -64,9 +64,10 @@ if (!$result) {
 
         <?php
             while ($employee = mysqli_fetch_assoc($result)) {
+                $img_src = !empty($employee['img']) ? 'data:image/jpeg;base64,' . base64_encode($employee['img']) : 'vendor/images/default-avatar.png';
                 echo "<tr>";
                 echo "<td>".$employee['emp_id']."</td>";
-                echo "<td><img src='vendor/images/".$employee['img']."' height='60px' width='60px' alt='Employee Image'></td>";
+                echo "<td><img src='$img_src' height='60px' width='60px' alt='Employee Image'></td>";
                 echo "<td>".$employee['first_name']." ".$employee['last_name']."</td>";
                 echo "<td>".$employee['email']."</td>";
                 echo "<td>".$employee['date_of_birth']."</td>";
