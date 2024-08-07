@@ -80,14 +80,21 @@ if (isset($_POST['add'])) {
         exit();
     }
 
-    // Prepare and execute SQL query
-    $insert_sql = "INSERT INTO employee (emp_id, first_name, last_name, email, password, date_of_birth, gender, contact, whatsapp_no, address, role, qualification, img, type, status, salary) 
-                   VALUES ('$emp_id', '$firstname', '$lastname', '$email', '$password', '$birthday', '$gender', '$contact', '$whatsapp', '$address', '$role', '$qualification', '$img', '$type', '$status', '$salary')";
+    // Prepare and execute SQL query for employee
+    $insert_employee_sql = "INSERT INTO employee (emp_id, first_name, last_name, email, password, date_of_birth, gender, contact, whatsapp_no, address, role, qualification, img, type, status) 
+                            VALUES ('$emp_id', '$firstname', '$lastname', '$email', '$password', '$birthday', '$gender', '$contact', '$whatsapp', '$address', '$role', '$qualification', '$img', '$type', '$status')";
 
-    if (mysqli_query($conn, $insert_sql)) {
-        echo "<script>alert('Successfully Added'); window.location.href='viewemp.php';</script>";
+    if (mysqli_query($conn, $insert_employee_sql)) {
+        // Insert salary into the salary table
+        $insert_salary_sql = "INSERT INTO salary (emp_id, salary) VALUES ('$emp_id', '$salary')";
+
+        if (mysqli_query($conn, $insert_salary_sql)) {
+            echo "<script>alert('Successfully Added'); window.location.href='viewemp.php';</script>";
+        } else {
+            echo "Error adding salary record: " . mysqli_error($conn);
+        }
     } else {
-        echo "Error adding record: " . mysqli_error($conn);
+        echo "Error adding employee record: " . mysqli_error($conn);
     }
 }
 ?>
