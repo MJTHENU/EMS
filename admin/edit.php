@@ -94,43 +94,54 @@ if (isset($_POST['update'])) {
         exit();
     }
 
-    // Prepare SQL query
-    $update_sql = "UPDATE employee SET 
-                    first_name='$firstname', 
-                    last_name='$lastname', 
-                    email='$email', 
-                    date_of_birth='$birthday', 
-                    gender='$gender', 
-                    contact='$contact', 
-                    whatsapp_no='$whatsapp', 
-                    address='$address', 
-                    role='$role', 
-                    qualification='$qualification', 
-                    type='$type', 
-                    status='$status', 
-                    salary='$salary'";
+    // Prepare SQL query for employee table
+    $update_employee_sql = "UPDATE employee SET 
+                            first_name='$firstname', 
+                            last_name='$lastname', 
+                            email='$email', 
+                            date_of_birth='$birthday', 
+                            gender='$gender', 
+                            contact='$contact', 
+                            whatsapp_no='$whatsapp', 
+                            address='$address', 
+                            role='$role', 
+                            qualification='$qualification', 
+                            type='$type', 
+                            status='$status'";
     
     if (!empty($_POST['password'])) {
-        $update_sql .= ", password='$password'";
+        $update_employee_sql .= ", password='$password'";
     }
     
     if (!empty($img)) {
-        $update_sql .= ", img='$img'";
+        $update_employee_sql .= ", img='$img'";
     }
 
-    $update_sql .= " WHERE emp_id='$emp_id'";
+    $update_employee_sql .= " WHERE emp_id='$emp_id'";
+    
+    // Execute SQL query for employee table
+    if (mysqli_query($conn, $update_employee_sql)) {
+        // Successfully updated employee table
+    } else {
+        echo "Error updating employee record: " . mysqli_error($conn);
+        exit();
+    }
 
-    // Execute SQL query
-    if (mysqli_query($conn, $update_sql)) {
+    // Prepare SQL query for salary table
+    $update_salary_sql = "UPDATE salary SET salary='$salary' WHERE emp_id='$emp_id'";
+    
+    // Execute SQL query for salary table
+    if (mysqli_query($conn, $update_salary_sql)) {
         echo ("<script>
             alert('Successfully Updated');
             window.location.href='viewemp.php';
             </script>");
     } else {
-        echo "Error updating record: " . mysqli_error($conn);
+        echo "Error updating salary record: " . mysqli_error($conn);
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
