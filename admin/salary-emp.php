@@ -18,6 +18,7 @@ $result = mysqli_query($conn, $sql);
 <html lang="en">
 <head>
     <?php include('vendor/inc/head.php') ?>
+	<link rel ="stylesheet" href="vendor/css/salary.css">
 </head>
 <body>
     
@@ -26,37 +27,33 @@ $result = mysqli_query($conn, $sql);
 
 <button class="add-emp"><a href="emp-bank.php">View Bank Details</a></button>
 <div class="contain">
-
 <table>
-			<tr>
-				<th align = "center">Emp. ID</th>
-				<th align = "center">Name</th>
-				
-				
-				<th align = "center">Base Salary</th>
-				<th align = "center">Bonus</th>
-				<th align = "center">TotalSalary</th>
-				
-				
-			</tr>
-			
-			<?php
-				while ($employee = mysqli_fetch_assoc($result)) {
-					echo "<tr>";
-					echo "<td>".$employee['emp_id']."</td>";
-					echo "<td>".$employee['first_name']." ".$employee['last_name']."</td>";
-					
-					echo "<td>".$employee['salary']."</td>";
-					echo "<td>".$employee['bonus']." %</td>";
-					echo "<td>".$employee['total']."</td>";
-					
-					
+    <tr>
+        <th align="center">Emp. ID</th>
+        <th align="center">Name</th>
+        <th align="center">Base Salary</th>
+        <th align="center">Bonus</th>
+        <th align="center">Total Salary</th>
+        <th align="center">Options</th>
+    </tr>
+    
+    <?php
+    while ($employee = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($employee['emp_id']) . "</td>";
+        echo "<td>" . htmlspecialchars($employee['first_name']) . " " . htmlspecialchars($employee['last_name']) . "</td>";
+        echo "<td>" . htmlspecialchars($employee['salary']) . "</td>";
+        echo "<td>" . htmlspecialchars($employee['bonus']) . " %</td>";
+        echo "<td>" . htmlspecialchars($employee['total']) . "</td>";
+        echo "<td>
+				<a class='edit' href=\"salary_edit.php?emp_id=".$employee['emp_id']."\">Edit</a> <br> <br>
+                <a class='delete' href=\"salary_delete.php?emp_id=".$employee['emp_id']."\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a>
+			</td>";
+        echo "</tr>";
+    }
+    ?>
+</table>
 
-				}
-
-
-			?>
-			
-			</table>
+</div>
 </body>
 </html>
