@@ -7,33 +7,31 @@ if (!isset($_SESSION['a_id'])) {
     exit();
 }
 
-$emp_id = $firstname = $lastname = $email = $contact = $address = $gender = $birthday = $role = $qualification = $whatsapp = $status = $type = $img = $salary = '';
+// Initialize variables
+$emp_id = $firstname = $lastname = $email = $password = $contact = $address = $gender = $birthday = $role = $qualification = $whatsapp = $status = $type = $img = $salary = '';
 
-// Check if `emp_id` is set in the URL and fetch existing data
 if (isset($_GET['emp_id'])) {
-    $emp_id = trim(mysqli_real_escape_string($conn, $_GET['emp_id']));
-    
-    $fetch_query = "SELECT * FROM employee WHERE emp_id='$emp_id'";
-    $fetch_result = mysqli_query($conn, $fetch_query);
-    
-    if ($fetch_result && mysqli_num_rows($fetch_result) > 0) {
-        $row = mysqli_fetch_assoc($fetch_result);
+    $emp_id = $_GET['emp_id'];
+    $query = "SELECT * FROM employee WHERE emp_id='$emp_id'";
+    $result = mysqli_query($conn, $query);
+    if ($result && mysqli_num_rows($result) == 1) {
+        $row = mysqli_fetch_assoc($result);
         $firstname = $row['first_name'];
         $lastname = $row['last_name'];
         $email = $row['email'];
+        $birthday = $row['date_of_birth'];
         $contact = $row['contact'];
+        $whatsapp = $row['whatsapp_no'];
         $address = $row['address'];
         $gender = $row['gender'];
-        $birthday = $row['date_of_birth'];
         $role = $row['role'];
         $qualification = $row['qualification'];
-        $whatsapp = $row['whatsapp_no'];
-        $status = $row['status'];
         $type = $row['type'];
-        $img = $row['img'];
+        $status = $row['status'];
         $salary = $row['salary'];
+        $img = $row['img'];
     } else {
-        echo "<script>alert('Employee not found'); window.location.href='viewemp.php';</script>";
+        echo "<script>alert('Employee not found');</script>";
         exit();
     }
 }
@@ -45,12 +43,14 @@ if (isset($_POST['update'])) {
     $firstname = trim(mysqli_real_escape_string($conn, $_POST['first_name']));
     $lastname = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
-    $password = !empty(trim($_POST['password'])) ? password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT) : null;
+    if (!empty($_POST['password'])) {
+        $password = password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT);
+    }
     $birthday = trim(mysqli_real_escape_string($conn, $_POST['date_of_birth']));
     $contact = trim(mysqli_real_escape_string($conn, $_POST['contact']));
     $whatsapp = trim(mysqli_real_escape_string($conn, $_POST['whatsapp_no']));
     $address = trim(mysqli_real_escape_string($conn, $_POST['address']));
-    $gender = trim(mysqli_real_escape_string($conn, $_POST['gender']));
+    $gender = isset($_POST['gender']) ? trim(mysqli_real_escape_string($conn, $_POST['gender'])) : $gender; // Default to existing value if not submitted
     $role = trim(mysqli_real_escape_string($conn, $_POST['role']));
     $qualification = trim(mysqli_real_escape_string($conn, $_POST['qualification']));
     $type = trim(mysqli_real_escape_string($conn, $_POST['type']));
@@ -60,16 +60,6 @@ if (isset($_POST['update'])) {
     // Handle file upload
     if (isset($_FILES['img']) && $_FILES['img']['error'] == UPLOAD_ERR_OK) {
         $img = mysqli_real_escape_string($conn, file_get_contents($_FILES['img']['tmp_name']));
-    } else {
-        // If no new image uploaded, keep the current image
-        $img_query = "SELECT img FROM employee WHERE emp_id='$emp_id'";
-        $img_result = mysqli_query($conn, $img_query);
-        if ($img_row = mysqli_fetch_assoc($img_result)) {
-            $img = $img_row['img'];
-        } else {
-            echo "<script>alert('Error fetching current image');</script>";
-            exit();
-        }
     }
 
     // Validate email format
@@ -88,7 +78,7 @@ if (isset($_POST['update'])) {
         exit();
     }
 
-    // Check for duplicate email (excluding current record)
+    // Check for duplicate email
     $check_email_query = "SELECT * FROM employee WHERE email='$email' AND emp_id != '$emp_id'";
     $check_email_result = mysqli_query($conn, $check_email_query);
     if (mysqli_num_rows($check_email_result) > 0) {
@@ -98,30 +88,36 @@ if (isset($_POST['update'])) {
 
     // Prepare SQL query
     $update_sql = "UPDATE employee SET 
-        first_name='$firstname', 
-        last_name='$lastname', 
-        email='$email', 
-        date_of_birth='$birthday', 
-        gender='$gender', 
-        contact='$contact', 
-        whatsapp_no='$whatsapp', 
-        address='$address', 
-        role='$role', 
-        qualification='$qualification', 
-        img='$img', 
-        type='$type', 
-        status='$status', 
-        salary='$salary'";
-
-    if ($password) {
+                    first_name='$firstname', 
+                    last_name='$lastname', 
+                    email='$email', 
+                    date_of_birth='$birthday', 
+                    gender='$gender', 
+                    contact='$contact', 
+                    whatsapp_no='$whatsapp', 
+                    address='$address', 
+                    role='$role', 
+                    qualification='$qualification', 
+                    type='$type', 
+                    status='$status', 
+                    salary='$salary'";
+    
+    if (!empty($_POST['password'])) {
         $update_sql .= ", password='$password'";
+    }
+    
+    if (!empty($img)) {
+        $update_sql .= ", img='$img'";
     }
 
     $update_sql .= " WHERE emp_id='$emp_id'";
 
     // Execute SQL query
     if (mysqli_query($conn, $update_sql)) {
-        echo ("<script> alert('Successfully Updated'); window.location.href='viewemp.php'; </script>");
+        echo ("<script>
+            alert('Successfully Updated');
+            window.location.href='viewemp.php';
+            </script>");
     } else {
         echo "Error updating record: " . mysqli_error($conn);
     }
@@ -135,76 +131,83 @@ if (isset($_POST['update'])) {
     <link rel="stylesheet" href="vendor/css/emp-edit.css">
 </head>
 <style>
-    .input--style-1 {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
-    .input-margin-top {
-        margin-top: 80px;
-    }
-    .p-t-20 {
-        text-align: center;
-    }
-    .custom-file-input {
-        display: none;
-    }
-    .custom-file-label {
-        display: inline-block;
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        background-color: #f0f0f0;
-        text-align: center;
-        line-height: 150px;
-        cursor: pointer;
-        margin: 20px;
-        border: 1px solid #ccc;
-    }
-    .custom-file-label img {
-        border-radius: 50%;
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: cover;
-        display: none;
-        height: 150px;
-    }
-    .btn {
-        display: inline-block;
-    }
+/* Your CSS code here */
+.input--style {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input--style option {
+    padding: 10px;
+}
+.input-margin-top {
+    margin-top: 80px;
+}
+.p-t-20 {
+    text-align: center;
+}
+.custom-file-input {
+    display: none;
+}
+
+.custom-file-label {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    text-align: center;
+    line-height: 150px;
+    cursor: pointer;
+    margin: 20px;
+    border: 1px solid #ccc;
+}
+
+.custom-file-label img {
+    border-radius: 50%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    display: none;
+    height: 150px;
+}
+
+.btn {
+    display: inline-block;
+}
 </style>
-<body>
+<body>    
     <?php include('vendor/inc/nav.php'); ?>
+
     <div class="page-wrapper bg-blue p-t-100 p-b-100 font-robo">
         <div class="wrapper wrapper--w680">
             <div class="card card-1">
                 <div class="card-heading"></div>
                 <div class="card-body">
-                    <h2 class="h2" style="font-family: 'Montserrat', sans-serif; font-size: 25px; text-align: center; color: #777; padding: 10px;">
-                        Update Employee
-                    </h2>
+                    <h2 class="h2" style="font-family: 'Montserrat', sans-serif; font-size: 25px; text-align: center; color: #777; padding: 10px;">Edit Employee</h2>
                     <hr>
-                    <form id="registration" action="update-employee.php" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="emp_id" value="<?php echo htmlspecialchars($emp_id); ?>">
+                    <form id="registration" action="edit.php?emp_id=<?php echo $emp_id; ?>" method="POST" enctype="multipart/form-data">
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style-1 input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" required readonly>
+                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" readonly>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div>
                                     <input id="profile" class="custom-file-input" type="file" name="img" accept="image/*" onchange="previewImage(event)">
                                     <label for="profile" class="custom-file-label">
-                                        <img id="profile-preview" class="image--cover" src="<?php echo htmlspecialchars($img ? 'data:image/jpeg;base64,' . base64_encode($img) : './vendor/images/profile.png'); ?>" alt="Profile Image Preview">
-                                        <span id="placeholder-text">Upload Profile</span>
+                                        <img id="profile-preview" class="image--cover" src="<?php echo !empty($img) ? 'data:image/jpeg;base64,' . base64_encode($img) : './vendor/images/profile.png'; ?>" alt="Profile Image Preview">
+                                        <span id="placeholder-text" style="display: <?php echo !empty($img) ? 'none' : 'inline-block'; ?>;">Upload Profile</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -217,9 +220,11 @@ if (isset($_POST['update'])) {
                                 </div>
                             </div>
                         </div>
+
                         <div class="input-group">
                             <input class="input--style-1" type="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>" required>
                         </div>
+
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -228,72 +233,91 @@ if (isset($_POST['update'])) {
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
-                                    <select class="input--style-1" name="gender" required>
-                                        <option value="male" <?php echo ($gender == 'male') ? 'selected' : ''; ?>>Male</option>
-                                        <option value="female" <?php echo ($gender == 'female') ? 'selected' : ''; ?>>Female</option>
+                                    <select class="input--style" name="gender" required>
+                                        <option value="Male" <?php if($gender == 'Male') echo 'selected'; ?>>Male</option>
+                                        <option value="Female" <?php if($gender == 'Female') echo 'selected'; ?>>Female</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style-1" type="text" name="contact" placeholder="Mobile No" value="<?php echo htmlspecialchars($contact); ?>" required>
+                                    <input class="input--style-1" type="text" name="contact" placeholder="Contact Number" value="<?php echo htmlspecialchars($contact); ?>" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style-1" type="text" name="whatsapp_no" placeholder="Whatsapp No" value="<?php echo htmlspecialchars($whatsapp); ?>" required>
+                                    <input class="input--style-1" type="text" name="whatsapp_no" placeholder="Whatsapp Number" value="<?php echo htmlspecialchars($whatsapp); ?>" required>
                                 </div>
                             </div>
                         </div>
+
                         <div class="input-group">
-                            <textarea class="input--style-1" name="address" placeholder="Address" required><?php echo htmlspecialchars($address); ?></textarea>
+                            <input class="input--style-1" type="text" name="address" placeholder="Address" value="<?php echo htmlspecialchars($address); ?>" required>
                         </div>
+
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style-1" type="text" name="role" placeholder="Role" value="<?php echo htmlspecialchars($role); ?>" required>
+                                    <input class="input--style-1" type="text" name="role" placeholder="Role" value="<?php echo htmlspecialchars($role); ?>">
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style-1" type="text" name="qualification" placeholder="Qualification" value="<?php echo htmlspecialchars($qualification); ?>" required>
+                                    <input class="input--style-1" type="text" name="qualification" placeholder="Qualification" value="<?php echo htmlspecialchars($qualification); ?>">
                                 </div>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <input class="input--style-1" type="text" name="type" placeholder="Employee Type" value="<?php echo htmlspecialchars($type); ?>" required>
+
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                <select class="input--style" name="type" required>                                       
+                                        <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Employee</option>
+                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>Trianee</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <select class="input--style" name="status" required>
+                                        <option value="active" <?php echo ($status == 'active') ? 'selected' : ''; ?>>Active</option>
+                                        <option value="inactive" <?php echo ($status == 'inactive') ? 'selected' : ''; ?>>Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="input-group">
-                            <input class="input--style-1" type="text" name="status" placeholder="Status" value="<?php echo htmlspecialchars($status); ?>" required>
+                            <input class="input--style-1" type="text" name="salary" placeholder="Salary" value="<?php echo htmlspecialchars($salary); ?>">
                         </div>
+
                         <div class="input-group">
-                            <input class="input--style-1" type="text" name="salary" placeholder="Salary" value="<?php echo htmlspecialchars($salary); ?>" required>
+                            <input class="input--style-1" type="password" name="password" placeholder="Password">
                         </div>
-                        <div class="input-group">
-                            <input class="input--style-1" type="password" name="password" placeholder="New Password (Leave blank if not changing)">
-                        </div>
+
                         <div class="p-t-20">
-                            <button class="btn btn--radius btn--green" type="submit" name="update">Update</button>
+                            <button class="btn btn--radius btn--green" type="submit" name="update">Update Employee</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
-        function previewImage(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('profile-preview');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                document.getElementById('placeholder-text').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('profile-preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+            document.getElementById('placeholder-text').style.display = 'none';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
     </script>
 </body>
 </html>
