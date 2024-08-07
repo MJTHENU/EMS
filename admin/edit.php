@@ -10,6 +10,7 @@ if (!isset($_SESSION['a_id'])) {
 // Initialize variables
 $emp_id = $firstname = $lastname = $email = $password = $contact = $address = $gender = $birthday = $role = $qualification = $whatsapp = $status = $type = $img = $salary = '';
 
+// Fetch employee data
 if (isset($_GET['emp_id'])) {
     $emp_id = $_GET['emp_id'];
     $query = "SELECT * FROM employee WHERE emp_id='$emp_id'";
@@ -40,6 +41,7 @@ if (isset($_GET['emp_id'])) {
 if (isset($_POST['update'])) {
     // Get input values
     $emp_id = trim(mysqli_real_escape_string($conn, $_POST['emp_id']));
+    $img = trim(mysqli_real_escape_string($conn, $_POST['img']));
     $firstname = trim(mysqli_real_escape_string($conn, $_POST['first_name']));
     $lastname = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
@@ -50,7 +52,7 @@ if (isset($_POST['update'])) {
     $contact = trim(mysqli_real_escape_string($conn, $_POST['contact']));
     $whatsapp = trim(mysqli_real_escape_string($conn, $_POST['whatsapp_no']));
     $address = trim(mysqli_real_escape_string($conn, $_POST['address']));
-    $gender = isset($_POST['gender']) ? trim(mysqli_real_escape_string($conn, $_POST['gender'])) : $gender; // Default to existing value if not submitted
+    $gender = trim(mysqli_real_escape_string($conn, $_POST['gender']));
     $role = trim(mysqli_real_escape_string($conn, $_POST['role']));
     $qualification = trim(mysqli_real_escape_string($conn, $_POST['qualification']));
     $type = trim(mysqli_real_escape_string($conn, $_POST['type']));
@@ -59,7 +61,13 @@ if (isset($_POST['update'])) {
 
     // Handle file upload
     if (isset($_FILES['img']) && $_FILES['img']['error'] == UPLOAD_ERR_OK) {
-        $img = mysqli_real_escape_string($conn, file_get_contents($_FILES['img']['tmp_name']));
+        $fileType = strtolower(pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION));
+        if (in_array($fileType, ['jpg', 'jpeg', 'png', 'gif'])) {
+            $img = mysqli_real_escape_string($conn, file_get_contents($_FILES['img']['tmp_name']));
+        } else {
+            echo "<script>alert('Only image files are allowed');</script>";
+            exit();
+        }
     }
 
     // Validate email format
@@ -78,7 +86,7 @@ if (isset($_POST['update'])) {
         exit();
     }
 
-    // Check for duplicate email
+    // Check email uniqueness
     $check_email_query = "SELECT * FROM employee WHERE email='$email' AND emp_id != '$emp_id'";
     $check_email_result = mysqli_query($conn, $check_email_query);
     if (mysqli_num_rows($check_email_result) > 0) {
@@ -123,7 +131,6 @@ if (isset($_POST['update'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +138,6 @@ if (isset($_POST['update'])) {
     <link rel="stylesheet" href="vendor/css/emp-edit.css">
 </head>
 <style>
-/* Your CSS code here */
 .input--style {
     width: 100%;
     padding: 10px;
@@ -165,6 +171,7 @@ if (isset($_POST['update'])) {
     cursor: pointer;
     margin: 20px;
     border: 1px solid #ccc;
+    position: relative;
 }
 
 .custom-file-label img {
@@ -172,8 +179,24 @@ if (isset($_POST['update'])) {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
-    display: none;
+    display: block;
     height: 150px;
+    width: 150px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.custom-file-label span {
+    display: inline-block;
+    line-height: 150px;
+    color: #777;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    height: 100%;
 }
 
 .btn {
@@ -198,10 +221,10 @@ if (isset($_POST['update'])) {
                                 </div>
                             </div>
                             <div class="col-2">
-                                <div>
+                                <div class="input-group">
                                     <input id="profile" class="custom-file-input" type="file" name="img" accept="image/*" onchange="previewImage(event)">
                                     <label for="profile" class="custom-file-label">
-                                        <img id="profile-preview" class="image--cover" src="<?php echo !empty($img) ? 'data:image/jpeg;base64,' . base64_encode($img) : './vendor/images/profile.png'; ?>" alt="Profile Image Preview">
+                                        <img id="profile-preview" class="image--cover" src="<?php echo !empty($img) ? 'data:image/jpeg;base64,' . base64_encode($img) : ''; ?>" alt="Profile Image Preview">
                                         <span id="placeholder-text" style="display: <?php echo !empty($img) ? 'none' : 'inline-block'; ?>;">Upload Profile</span>
                                     </label>
                                 </div>
@@ -211,7 +234,7 @@ if (isset($_POST['update'])) {
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style-1" type="text" name="first_name" placeholder="First Name" value="<?php echo htmlspecialchars($firstname); ?>" required>
+                                <input class="input--style-1" type="text" name="first_name" placeholder="First Name" value="<?php echo htmlspecialchars($firstname); ?>" required>
                                 </div>
                             </div>
                             <div class="col-2">
@@ -233,7 +256,7 @@ if (isset($_POST['update'])) {
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
-                                    <select class="input--style" name="gender" required>
+                                    <select class="input--style" name="gender" disabled>
                                         <option value="Male" <?php if($gender == 'Male') echo 'selected'; ?>>Male</option>
                                         <option value="Female" <?php if($gender == 'Female') echo 'selected'; ?>>Female</option>
                                     </select>
@@ -274,9 +297,9 @@ if (isset($_POST['update'])) {
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                <select class="input--style" name="type" required>                                       
+                                    <select class="input--style" name="type" required>                                       
                                         <option value="2" <?php echo ($type == '2') ? 'selected' : ''; ?>>Employee</option>
-                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>Trianee</option>
+                                        <option value="3" <?php echo ($type == '3') ? 'selected' : ''; ?>>Trainee</option>
                                     </select>
                                 </div>
                             </div>
