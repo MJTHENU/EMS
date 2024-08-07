@@ -245,7 +245,7 @@ if (isset($_POST['update'])) {
                         </div>
 
                         <div class="input-group">
-                            <input class="input--style-1" type="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>" required>
+                            <input class="input--style-1" type="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>" readonly>
                         </div>
 
                         <div class="row row-space">
