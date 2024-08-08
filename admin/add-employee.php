@@ -17,7 +17,8 @@ if (isset($_POST['add'])) {
     $firstname = trim(mysqli_real_escape_string($conn, $_POST['first_name']));
     $lastname = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
-    $password = isset($_POST['password']) && !empty(trim($_POST['password'])) ? password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT) : password_hash('kite@123', PASSWORD_BCRYPT);
+    $password = isset($_POST['password']) && !empty(trim($_POST['password']))
+     ? password_hash(trim(mysqli_real_escape_string($conn, $_POST['password'])), PASSWORD_BCRYPT) : password_hash('kite@123', PASSWORD_BCRYPT);
     $birthday = trim(mysqli_real_escape_string($conn, $_POST['date_of_birth']));
     $contact = trim(mysqli_real_escape_string($conn, $_POST['contact']));
     $whatsapp = trim(mysqli_real_escape_string($conn, $_POST['whatsapp_no']));
