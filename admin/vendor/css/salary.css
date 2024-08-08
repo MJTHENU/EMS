@@ -1,0 +1,47 @@
+
+
+a.edit {
+    padding: 5px 20px;
+    background-color: green;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  
+  a.edit:hover {
+    opacity: 0.7;
+  }
+  
+  
+  a.delete {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #e74c3c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  
+  a.delete:hover {
+    opacity: 0.7;
+  }
+  
+  @media only screen and (max-width: 1454px) {
+    body {
+      font-size: 16px; 
+  }
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+  
+    th, td {
+        min-width: 100px;
+    }
+    .add-emp {
+      margin-left: auto;
+      margin-top: 10px; /* Add margin for spacing */
+  }
+  }
+  
+  
