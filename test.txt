@@ -1,5 +1,5 @@
 //You can install PhpSpreadsheet and TCPDF using Composer:
 
-    composer require phpoffice/phpspreadsheet (or)
+    composer require phpoffice/phpspreadsheet
     composer require tecnickcom/tcpdf
 

@@ -15,7 +15,7 @@ if (!isset($_SESSION['a_id'])) {
 function getNextMonth($month, $year) {
     $nextMonth = $month + 1;
     $nextYear = $year;
-    if ($nextMonth > 12) {
+    if ($nextMonth > 12) {  
         $nextMonth = 1;
         $nextYear++;
     }
