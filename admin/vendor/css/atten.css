@@ -1,13 +1,79 @@
-@media only screen and (max-width: 1024px) {
-    body {
-      font-size: 6px; 
+#search-box {
+    margin-bottom: 15px;
   }
-    table {
-        overflow-x: auto;
-        display: block;
-    }
+  .green {
+    color: green;
+  }
   
-    th, td {
-        min-width: 120px;
-    }
+  .red {
+    color: red;
   }
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.button-container .search-button, .button-container .download-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+.button-container .search-button {
+    background-color: #4CAF50;
+    color: white;
+}
+.button-container .search-button:hover {
+    background-color: #45a049;
+}
+.button-container .download-button {
+    background-color: #008CBA;
+    color: white;
+}
+.button-container .download-button:hover {
+    background-color: #007bb5;
+}
+.button-container .search-button i, .button-container .download-button i {
+    margin-right: 10px;
+}
+  
+.next {
+    background-color: #74ee55;
+    color: white;
+    padding: 5px 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+} 
+.Previous{
+    background-color: #ee5555;
+    color: white;
+    padding: 5px 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+} 
+.Previous:hover,.next:hover {
+    background-color: #d7d94a; /* Darker green for hover */
+    color: black; /* Keep text white */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+}
+  @media only screen and (max-width: 1024px) {
+      body {
+        font-size: 6px; 
+    }
+      table {
+          overflow-x: auto;
+          display: block;
+      }
+    
+      th, td {
+          min-width: 120px;
+      }
+    }

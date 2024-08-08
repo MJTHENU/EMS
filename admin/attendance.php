@@ -15,7 +15,7 @@ if (!isset($_SESSION['a_id'])) {
 function getNextMonth($month, $year) {
     $nextMonth = $month + 1;
     $nextYear = $year;
-    if ($nextMonth > 12) {  
+    if ($nextMonth > 12) {
         $nextMonth = 1;
         $nextYear++;
     }
@@ -113,18 +113,10 @@ $date1 = date('t');
 <head>
     <?php include('vendor/inc/head.php') ?>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="vendor/css/atten.css">
+    <link rel="stylesheet" href="vendor/css/atten.css?v=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        #search-box {
-            margin-bottom: 15px;
-        }
-        .green {
-            color: green;
-        }
-
-        .red {
-            color: red;
-        }
+       
     </style>
 </head>
 <body>
@@ -132,6 +124,10 @@ $date1 = date('t');
     <div class="container-fluid">
         <h2 class="h2">Employee Attendance</h2>
         <div class="contain">
+            <div class="button-container">
+                <button class="search-button"><i class="fa fa-search"></i>Emp ID / Name</button>
+                <button class="download-button"><i class="fa fa-download"></i> Download</button>
+            </div>
             <table border="1">
                 <tr>
                     <th colspan="<?php echo $daysInMonth + 2; ?>"> Month: <?php echo date("F Y", strtotime("$year-$month-01")); ?></th>
@@ -159,7 +155,6 @@ $date1 = date('t');
                                         echo '<i class="fa fa-times red" aria-hidden="true"></i>';
                                     }
                                 } elseif (in_array($date, $holidays)) {
-                                    // Display holidays in black color
                                     echo '<span style="color: red;">Holiday</span>';
                                 } else {
                                     echo '-';
@@ -177,5 +172,50 @@ $date1 = date('t');
             </div>
         </div>
     </div>
+
+    <script>
+    document.querySelector('.download-button').addEventListener('click', function () {
+        // Create a workbook and a worksheet
+        var wb = XLSX.utils.book_new();
+        var ws_data = [];
+
+        // Get the table headers (e.g., Employee, 1, 2, 3, ...)
+        var headers = [];
+        var headerCells = document.querySelectorAll("table tr:nth-child(2) th");
+        headerCells.forEach(function(cell) {
+            headers.push(cell.innerText);
+        });
+        ws_data.push(headers);
+
+        // Get the table rows and cells
+        var rows = document.querySelectorAll("table tr:nth-child(n+3)");
+        rows.forEach(function(row) {
+            var rowData = [];
+            var cells = row.querySelectorAll("td, th");
+            cells.forEach(function(cell) {
+                // Convert the icons to text-based symbols
+                if (cell.innerHTML.includes('fa-check')) {
+                    rowData.push("✔ Present");
+                } else if (cell.innerHTML.includes('fa-times')) {
+                    rowData.push("✖ Absent");
+                } else if (cell.innerText.includes('Holiday')) {
+                    rowData.push("Holiday");
+                } else {
+                    rowData.push(cell.innerText); // For other cells, keep the text as it is
+                }
+            });
+            ws_data.push(rowData);
+        });
+
+        // Add the worksheet to the workbook
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        XLSX.utils.book_append_sheet(wb, ws, "Attendance");
+
+        // Export the workbook as an Excel file
+        XLSX.writeFile(wb, "attendance_<?php echo date('Y_m'); ?>.xlsx");
+    });
+</script>
+
+
 </body>
 </html>
