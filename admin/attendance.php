@@ -115,6 +115,8 @@ $date1 = date('t');
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="vendor/css/atten.css?v=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
+
     <style>
        
     </style>
@@ -175,9 +177,49 @@ $date1 = date('t');
 
     <script>
     document.querySelector('.download-button').addEventListener('click', function () {
-        // Create a workbook and a worksheet
-        var wb = XLSX.utils.book_new();
-        var ws_data = [];
+        // Create a workbook and add a worksheet
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Attendance');
+
+        // Get today's date
+        var today = new Date();
+        var formattedDate = today.toLocaleDateString('en-CA'); // YYYY-MM-DD format
+
+        // Initialize counters
+        var totalEmp = 0;
+        var absentCount = 0;
+        var presentCount = 0;
+
+        // Get the table rows and cells
+        var rows = document.querySelectorAll("table tr:nth-child(n+3)");
+        rows.forEach(function(row) {
+            totalEmp++; // Increment total employee count
+            var cells = row.querySelectorAll("td");
+            cells.forEach(function(cell) {
+                if (cell.innerHTML.includes('fa-check')) {
+                    presentCount++; // Increment present count
+                } else if (cell.innerHTML.includes('fa-times')) {
+                    absentCount++; // Increment absent count
+                }
+            });
+        });
+
+        // Add summary information at the top of the worksheet
+        worksheet.addRow(['Date:', formattedDate]);
+        worksheet.addRow(['Total Employees:', totalEmp]);
+        worksheet.addRow(['Present Count:', presentCount]);
+        worksheet.addRow(['Absent Count:', absentCount]);
+        worksheet.addRow([]); // Empty row for spacing
+
+        // Apply styling to the summary section
+        worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+            if (rowNumber <= 4) {
+                row.eachCell({ includeEmpty: false }, function(cell) {
+                    cell.font = { bold: true };
+                    cell.alignment = { horizontal: 'center' };
+                });
+            }
+        });
 
         // Get the table headers (e.g., Employee, 1, 2, 3, ...)
         var headers = [];
@@ -185,15 +227,24 @@ $date1 = date('t');
         headerCells.forEach(function(cell) {
             headers.push(cell.innerText);
         });
-        ws_data.push(headers);
+        worksheet.addRow(headers);
 
-        // Get the table rows and cells
-        var rows = document.querySelectorAll("table tr:nth-child(n+3)");
+        // Apply header styling
+        worksheet.getRow(6).eachCell((cell) => {
+            cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF4F81BD' }
+            };
+            cell.alignment = { horizontal: 'center' };
+        });
+
+        // Fill in the data for each employee
         rows.forEach(function(row) {
             var rowData = [];
             var cells = row.querySelectorAll("td, th");
             cells.forEach(function(cell) {
-                // Convert the icons to text-based symbols
                 if (cell.innerHTML.includes('fa-check')) {
                     rowData.push("✔ Present");
                 } else if (cell.innerHTML.includes('fa-times')) {
@@ -204,17 +255,44 @@ $date1 = date('t');
                     rowData.push(cell.innerText); // For other cells, keep the text as it is
                 }
             });
-            ws_data.push(rowData);
+            worksheet.addRow(rowData);
         });
 
-        // Add the worksheet to the workbook
-        var ws = XLSX.utils.aoa_to_sheet(ws_data);
-        XLSX.utils.book_append_sheet(wb, ws, "Attendance");
+        // Apply data styling
+        worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+            if (rowNumber > 6) { // Skip summary and header rows
+                row.eachCell(function(cell) {
+                    cell.alignment = { horizontal: 'center' };
+                    if (cell.value === "✖ Absent") {
+                        cell.font = { color: { argb: 'FFFF0000' } };
+                    } else if (cell.value === "✔ Present") {
+                        cell.font = { color: { argb: 'FF008000' } };
+                    }
+                });
+            }
+        });
 
-        // Export the workbook as an Excel file
-        XLSX.writeFile(wb, "attendance_<?php echo date('Y_m'); ?>.xlsx");
+        // Set column widths
+        worksheet.columns = [
+            { width: 20 }, { width: 12 }, { width: 12 }, { width: 12 }, { width: 12 }
+        ];
+
+        // Export the workbook as an Excel file with today's date in the filename
+        workbook.xlsx.writeBuffer().then(function(data) {
+            var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = "attendance_" + formattedDate + ".xlsx";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
     });
 </script>
+
+
+
 
 
 </body>
