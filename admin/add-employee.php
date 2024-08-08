@@ -119,9 +119,6 @@ if (isset($_POST['add'])) {
 .input--style option {
     padding: 10px;
 }
-.input-margin-top {
-    margin-top: 80px;
-}
 .p-t-20 {
     text-align: center;
 }
@@ -168,7 +165,7 @@ if (isset($_POST['add'])) {
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input class="input--style input-margin-top" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin-top: 20px;" required>
+                                    <input class="input--style" type="text" name="emp_id" placeholder="ID" value="<?php echo htmlspecialchars($emp_id); ?>" style="margin-top: 80px;" required>
                                 </div>
                             </div>
                             <div class="col-2">
