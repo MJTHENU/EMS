@@ -172,7 +172,14 @@ $date1 = date('t');
                                 ?>
                             </td>
                         <?php endfor; ?>
-                        <td><button><a class="view-attendance" href="view-attendance.php?emp_id=<?php echo $emp_id ?>&month=<?php echo $month ?>&year=<?php echo $year ?>">View</a></button></td>
+                        <!-- <td><button><a class="view-attendance" href="view-attendance.php?emp_id=<?php echo $emp_id ?>&month=<?php echo $month ?>&year=<?php echo $year ?>">View</a></button></td> -->
+                        <td>
+                            <button>
+                                <a class="view-attendance" href="view-attendance.php?emp_id=<?php echo $emp_id ?>&month=<?php echo $month ?>&year=<?php echo $year ?>">
+                                    <i class="fa fa-eye"></i> 
+                                </a>
+                            </button>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </table>
@@ -298,6 +305,7 @@ $date1 = date('t');
     });
 </script>
 
+<!-- Auto-fill the employee dropdown with employee names -->
 <script>
     document.getElementById('employee-input').addEventListener('input', function() {
         var input = this.value;
