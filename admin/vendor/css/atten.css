@@ -1,79 +1,142 @@
-#search-box {
-    margin-bottom: 15px;
-  }
-  .green {
-    color: green;
-  }
-  
-  .red {
-    color: red;
-  }
-  .button-container {
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h2.h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+.container-fluid {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.contain {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
-.button-container .search-button, .button-container .download-button {
+
+.input-container {
+    position: relative;
+    width: 60%;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-container input:hover,
+.input-container input:focus {
+    border-color: #4F81BD;
+    box-shadow: 0 0 5px rgba(79, 129, 189, 0.5);
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+}
+
+.button-container {
     display: flex;
-    align-items: center;
+    gap: 10px;
+}
+
+.button-container button {
     padding: 10px 20px;
     font-size: 16px;
-    cursor: pointer;
+    color: #fff;
+    background-color: #4F81BD;
     border: none;
-    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
-.button-container .search-button {
-    background-color: #4CAF50;
-    color: white;
+
+.button-container button:hover {
+    background-color: #3B5998;
 }
-.button-container .search-button:hover {
-    background-color: #45a049;
+
+.button-container button i {
+    margin-right: 8px;
 }
-.button-container .download-button {
-    background-color: #008CBA;
-    color: white;
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
-.button-container .download-button:hover {
-    background-color: #007bb5;
+
+table, th, td {
+    border: 1px solid #ddd;
 }
-.button-container .search-button i, .button-container .download-button i {
-    margin-right: 10px;
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
 }
-  
-.next {
-    background-color: #74ee55;
-    color: white;
-    padding: 5px 15px;
-    font-size: 18px;
+
+th {
+    background-color: #4F81BD;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.fa-check.green {
+    color: #28a745;
+}
+
+.fa-times.red {
+    color: #dc3545;
+}
+
+.Previous, .next {
+    color: #4F81BD;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #4F81BD;
     border-radius: 5px;
-    margin-left: 10px;
-    cursor: pointer;
-} 
-.Previous{
-    background-color: #ee5555;
-    color: white;
-    padding: 5px 15px;
-    font-size: 18px;
-    border-radius: 5px;
-    margin-right: 10px;
-    cursor: pointer;
-} 
-.Previous:hover,.next:hover {
-    background-color: #d7d94a; /* Darker green for hover */
-    color: black; /* Keep text white */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+    transition: background-color 0.3s ease;
 }
-  @media only screen and (max-width: 1024px) {
-      body {
-        font-size: 6px; 
-    }
-      table {
-          overflow-x: auto;
-          display: block;
-      }
-    
-      th, td {
-          min-width: 120px;
-      }
-    }
+
+.Previous:hover, .next:hover {
+    background-color: #4F81BD !important;
+    color: #fff;
+}
+
+.view-attendance {
+    text-decoration: none;
+    color: #fff;
+}
+
+button a.view-attendance {
+    color: inherit;
+    text-decoration: none;
+}

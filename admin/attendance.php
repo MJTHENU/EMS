@@ -116,19 +116,28 @@ $date1 = date('t');
     <link rel="stylesheet" href="vendor/css/atten.css?v=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
-    <style>
-       
-    </style>
+    
 </head>
 <body>
     <?php include('vendor/inc/nav.php') ?>
     <div class="container-fluid">
         <h2 class="h2">Employee Attendance</h2>
         <div class="contain">
-            <div class="button-container">
-                <button class="search-button"><i class="fa fa-search"></i>Emp ID / Name</button>
-                <button class="download-button"><i class="fa fa-download"></i> Download</button>
+            <div class="input-container">
+                <input list="employee-options" id="employee-input" placeholder="Search Emp ID / Name">
+                <i class="fa fa-search search-icon"></i>
+                <datalist id="employee-options">
+                    <?php foreach ($employees as $emp_id => $emp_name): ?>
+                        <option value="<?php echo $emp_id . ' - ' . $emp_name; ?>"></option>
+                    <?php endforeach; ?>
+                </datalist>
             </div>
+            <div class="button-container">
+                <button class="search-button"><i class="fa fa-pen"></i>Edit</button>
+                <button class="download-button"><i class="fa fa-download"></i> Download</button>
+            </div>      
+        </div>
+
             <table border="1">
                 <tr>
                     <th colspan="<?php echo $daysInMonth + 2; ?>"> Month: <?php echo date("F Y", strtotime("$year-$month-01")); ?></th>
@@ -288,6 +297,19 @@ $date1 = date('t');
         });
     });
 </script>
+
+<script>
+    document.getElementById('employee-input').addEventListener('input', function() {
+        var input = this.value;
+        var selectedOption = document.querySelector('#employee-options option[value="' + input + '"]');
+
+        if (selectedOption) {
+            var empId = input.split(' - ')[0];
+            window.location.href = 'view-attendance.php?emp_id=' + empId + '&month=<?php echo $month; ?>&year=<?php echo $year; ?>';
+        }
+    });
+</script>
+
 
 
 </body>
