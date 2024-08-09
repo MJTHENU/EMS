@@ -116,7 +116,6 @@ $date1 = date('t');
     <link rel="stylesheet" href="vendor/css/atten.css?v=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@latest/dist/exceljs.min.js"></script>
-
     <style>
        
     </style>
@@ -174,7 +173,6 @@ $date1 = date('t');
             </div>
         </div>
     </div>
-
     <script>
     document.querySelector('.download-button').addEventListener('click', function () {
         // Create a workbook and add a worksheet
@@ -290,9 +288,6 @@ $date1 = date('t');
         });
     });
 </script>
-
-
-
 
 
 </body>
