@@ -184,6 +184,37 @@ $stmt6->close();
             background-color: #e9ecef;
             cursor: not-allowed;
         }
+        /* Button Styling */
+.view-button {
+    display: inline-block; /* Allows for padding and margins */
+    padding: 10px 20px; /* Adjust padding as needed */
+    margin: 10px; /* Adjust margin as needed */
+    background-color: #007bff; /* Default background color */
+    color: #ffffff; /* Default text color */
+    border: none; /* Removes default border */
+    border-radius: 15px; /* Rounded corners */
+    font-size: 16px; /* Adjust font size as needed */
+    text-align: center; /* Center align text */
+    text-decoration: none; /* Remove underline from links */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for background color and scale */
+}
+
+/* Hover Effect */
+.view-button:hover {
+    background-color: yellow; /* Background color on hover */
+    color: black; /* Text color on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Center Align in Parent Container */
+.parent-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Adjust based on your layout */
+}
+
     </style>
 </head>
 <body>
