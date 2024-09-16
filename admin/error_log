@@ -1,0 +1,52 @@
+[10-Feb-2024 04:26:54 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 04:27:02 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 04:27:12 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 06:51:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 07:13:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 07:13:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 08:05:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 60
+[10-Feb-2024 08:06:09 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:64
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 64
+[10-Feb-2024 08:12:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:66
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 66
+[10-Feb-2024 08:12:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:66
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 66
+[10-Feb-2024 08:12:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:66
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 66
+[10-Feb-2024 08:12:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/kitecareer/public_html/emp/admin/attendance.php:66
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/attendance.php on line 66
+[10-Feb-2024 09:59:01 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mysqli_stmt_get_result() in /home/kitecareer/public_html/emp/admin/mark.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/kitecareer/public_html/emp/admin/mark.php on line 24

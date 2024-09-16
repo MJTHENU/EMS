@@ -1,0 +1,12 @@
+//You can install PhpSpreadsheet and TCPDF using Composer:
+
+    composer require phpoffice/phpspreadsheet
+    composer require tecnickcom/tcpdf
+
+kitecareer.com/cpanel
+
+
+Username:kite-emp
+Database:kite-emp
+Password:(Oy(zrM&S[us
+

@@ -1,0 +1,124 @@
+  /* Wrapper Styles */
+  .page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f2f2f2;
+}
+
+/* Card Styles */
+.card-1 {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px 60px;
+    margin-top: 20px;
+}
+
+/* Form Heading */
+.h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Input Group Styles */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input--style-1 {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f9f9f9;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+.input--style-1:focus {
+    border-color: #007bff;
+    background-color: #e8f0fe;
+}
+
+/* File Input */
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    color: #888;
+    font-size: 16px;
+}
+
+/* Placeholder Styles for File Input */
+input[type="file"]::before {
+    content: 'Bank Passbook FrontPage Upload';
+    display: block;
+    color: #888;
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+input[type="file"]:focus {
+    border-color: #007bff;
+}
+
+/* Button Styles */
+.btn--radius {
+    border-radius: 25px;
+}
+
+.btn--green {
+    background-color: #28a745;
+    color: #fff;
+    padding: 12px 30px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn--green:hover {
+    background-color: #218838;
+}
+
+/* Form Submission Button */
+.p-t-20 {
+    padding-top: 20px;
+    text-align: center;
+}
+.custom-file-label {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  width: 100%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #495057;
+}
+
+.custom-file-label:hover {
+  background-color: #e2e6ea;
+}
+
+#placeholder-text {
+  display: inline-block;
+  color: #6c757d;
+}
+
+#passbook_img:focus + #placeholder-text {
+  display: none;
+}

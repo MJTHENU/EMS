@@ -1,0 +1,9 @@
+<?php
+$plainTextPassword = '12345';
+$hashedPassword = password_hash($plainTextPassword, PASSWORD_BCRYPT);
+
+echo $hashedPassword;
+?>
+
+password: 12345
+$hashedPassword:$2y$10$eM4.0TiTpiR1FMomD20.5uvq1Aw2w92u6q3MwBiKhMTqCl6J3KdEq

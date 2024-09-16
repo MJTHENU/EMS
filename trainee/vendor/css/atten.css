@@ -1,0 +1,161 @@
+.card {
+    overflow: hidden;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #fff;
+    display: flex;
+  }
+  
+  .card-1 {
+    -webkit-box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+  } 
+  
+
+  
+   .card-1 .card-body {
+    width: 100vh;
+    padding: 50px 15px;
+   
+  } 
+  .card-img img{
+    width: 45vh;
+    height: 68vh;
+  }
+
+  
+  @media (max-width: 767px) {
+    .card-1 .card-body {
+      padding: 0 40px;
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+  
+ 
+
+  .card {
+      width: 100%;
+      margin: 0;
+      box-shadow: none;
+  }
+
+  .card-img img {
+      width: 0;
+  }
+
+  .input--style-1 {
+      width: 100%;
+  }
+  }
+  @media only screen and (max-width: 767px) {
+    body {
+      font-size: 20px; 
+  }
+    table {
+        overflow-x: auto;
+        display: block;
+    }
+  
+    th {
+        min-width: 120px;
+    }
+  }
+  @media only screen and (min-width: 767px) and (max-width:1024px) {
+    .card-img img {
+      width: 40vh;
+      height: 80vh;
+  }
+  }
+
+    /* General styling for both forms */
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Flexbox layout for single row alignment */
+form > * {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+form select,
+form input[type="datetime-local"],
+form button {
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Container to center-align button */
+form {
+  display: flex;               /* Use Flexbox layout */
+  justify-content: center;     /* Center-align items horizontally */
+  align-items: center;         /* Center-align items vertically (optional) */
+  margin: 20px 0;              /* Margin around the form */
+}
+
+/* General button styling */
+form button {
+  background-color: #4F81BD;  /* Background color */
+  color: white;               /* Text color */
+  cursor: pointer;            /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+  padding: 10px 20px;         /* Padding for button size */
+  border: none;               /* Remove default border */
+  border-radius: 50px;        /* Oval shape */
+  width: 150px;               /* Fixed width */
+  display: inline-block;      /* Align the button inline */
+  text-align: center;         /* Center-align text inside button */
+  font-size: 16px;            /* Font size */
+}
+
+/* Button hover effect */
+form button:hover {
+  background-color: #2a5d8f;  /* Darker background color on hover */
+}
+
+
+form button:hover {
+  background-color: #218838;
+}
+
+/* Specific styles for check-in and check-out fields */
+#checkInField,
+#checkOutField {
+  display: flex;
+  align-items: center;
+}
+
+#checkInField label,
+#checkOutField label {
+  margin-right: 10px;
+}
+
+#checkInField input,
+#checkOutField input {
+  flex: 1;
+}
+
+/* Error message styling */
+.error {
+  color: red;
+  font-size: 14px;
+  display: block;
+  margin-top: 5px;
+}

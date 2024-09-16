@@ -1,0 +1,257 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h2.h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+.container-fluid {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.contain {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    position: relative;
+    width: 60%;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-container input:hover,
+.input-container input:focus {
+    border-color: #4F81BD;
+    box-shadow: 0 0 5px rgba(79, 129, 189, 0.5);
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4F81BD;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #3B5998;
+}
+
+.button-container button i {
+    margin-right: 8px;
+}
+.download-btn {
+    position: absolute;
+    top: 20px; /* Adjust as needed for spacing from the top */
+    right: 20px; /* Adjust as needed for spacing from the right */
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4F81BD;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #3B5998;
+}
+
+.download-btn i {
+    margin-right: 8px;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+th {
+    background-color: #4F81BD;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.fa-check.green {
+    color: #28a745;
+}
+
+.fa-times.red {
+    color: #dc3545;
+}
+
+.Previous, .next {
+    color: #4F81BD;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #4F81BD;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.Previous:hover, .next:hover {
+    background-color: #4F81BD !important;
+    color: #fff;
+}
+
+.view-attendance {
+    text-decoration: none;
+    color: #fff;
+}
+
+button a.view-attendance {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Style the button */
+button {
+    background-color: transparent; /* Remove default background color */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+}
+
+/* Style the link inside the button */
+.view-attendance {
+    color: #007bff; /* Set the color of the icon and text */
+    text-decoration: none; /* Remove underline from the link */
+    font-size: 16px; /* Set the font size */
+    display: inline-flex; /* Align items horizontally */
+    align-items: center; /* Center items vertically */
+}
+
+/* Style the icon */
+.view-attendance i {
+    margin-right: 5px; /* Add space between icon and text */
+}
+
+/* Add hover effect */
+.view-attendance:hover {
+    color: #0056b3; /* Change color on hover */
+}
+
+.view-attendance:hover i {
+    color: #0056b3; /* Change icon color on hover */
+}
+
+
+/* new */
+.holiday-form {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.holiday-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.holiday-form input[type="date"] {
+    margin-bottom: 10px;
+}
+
+.holiday-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.holiday-form button:hover {
+    background-color: #0056b3;
+}
+.delete-btn {
+    background-color: red !important;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: darkred !important; /* Change to the color you prefer */
+}
+
+#message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+#holiday-form {
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    align-items: flex-start; /* Align items to the start of the form */
+    max-width: 300px; /* Optional: set a max width for the form */
+    margin: 0 auto; /* Optional: center the form */
+}
+#holiday-form button {
+    margin: 5px 0; /* Add some space between the buttons */
+}
+
+
+
+

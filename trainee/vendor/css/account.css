@@ -1,0 +1,83 @@
+/* account.css */
+.page-wrapper {
+    background: #f2f2f2;
+    padding: 20px;
+}
+
+.wrapper {
+    margin: 0 auto;
+}
+
+.card-1 {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.col {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.col:last-child {
+    margin-right: 0;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.input--style-1 {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    font-size: 16px;
+}
+
+.passbook-img {
+    /* max-width: 150px; */
+    /* max-height: 150px; */    
+    /* border-radius: 50%; */
+    width: 40%;
+    display: block;
+    margin-top: 10px;
+    
+}
+
+.btn--radius {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn--radius:hover {
+    background-color: #0056b3;
+}

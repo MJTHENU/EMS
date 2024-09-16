@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+
+body {
+  margin: 0px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Aligns the search input to the left and button to the right */
+  margin-bottom: 20px; /* Optional: Adds some space below the row */
+}
+
+.input-container {
+  position: relative;
+  width: 70%; /* Adjust width as needed */
+}
+
+#employee-input {
+  width: 100%;
+  padding: 10px 40px 10px 20px; /* Adds space for the icon inside the input */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 25px; /* Rounded corners */
+  margin-left: 25px;
+  margin-top: 20px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa; /* Icon color */
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.add-emp {
+  background-color: #3e6dec; /* Green background color */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 50px; /* Round shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px; /* Adds some space between the search and button */
+}
+
+.add-emp a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-emp i {
+  margin-right: 8px; /* Space between icon and text */
+}
+
+.add-emp:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.add-emp:active {
+  background-color: #3e8e41; /* Even darker green when clicked */
+}
+
+
+.contain {
+  padding: 0 20px;
+}
+
+table {
+  margin: 0px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+
+.h2{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 25px;
+  text-align: center;
+  color: #777;
+  padding: 10px 0;
+}
+
+tr:hover {
+  background-color: #76d7c4;
+}
+
+th {
+  background-color: #607d8b;
+  color: white;
+  padding: 10px;
+}
+a.edit {
+  padding: 5px 20px;
+  background-color: green;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+a.edit:hover {
+  opacity: 0.7;
+}
+
+
+a.delete {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: #e74c3c;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+a.delete:hover {
+  opacity: 0.7;
+}
+
+@media only screen and (max-width: 1454px) {
+  body {
+    font-size: 16px; 
+}
+  table {
+      overflow-x: auto;
+      display: block;
+  }
+
+  th, td {
+      min-width: 100px;
+  }
+  .add-emp {
+    margin-left: auto;
+    margin-top: 10px; /* Add margin for spacing */
+}
+}
+
