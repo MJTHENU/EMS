@@ -28,18 +28,21 @@ if (mysqli_num_rows($result1) > 0) {
     exit();
 }
 
-// Fetch attendance data with ordering by check_in
-$attendance_sql = "SELECT employee.emp_id, employee.first_name, attendance.check_in, attendance.status
-                    FROM employee 
-                    LEFT JOIN attendance ON employee.emp_id = attendance.emp_id
-                    WHERE employee.type = 2 AND (attendance.att_date = CURDATE() OR attendance.att_date IS NULL)
-                    ORDER BY attendance.check_in DESC, employee.first_name";
+// Updated query to get both present and absent employees
+$attendance_sql = "
+    SELECT employee.emp_id, employee.first_name, attendance.check_in, attendance.status
+    FROM employee
+    LEFT JOIN attendance ON employee.emp_id = attendance.emp_id AND attendance.att_date = CURDATE()
+    WHERE employee.type = 2
+    ORDER BY attendance.check_in DESC, employee.first_name";
 
+// Execute the query
 $attendance_result = mysqli_query($conn, $attendance_sql);
 ?>
+
 <!DOCTYPE html>
 <html>
-    <?php include('vendor/inc/head.php') ?>
+<?php include('vendor/inc/head.php') ?>
     <style>
         body {
             margin: 0;
@@ -139,7 +142,6 @@ $attendance_result = mysqli_query($conn, $attendance_sql);
             <div class="right">
                 <h2>Today's Attendance Report</h2>
 
-                <!-- Center-align, padding, and margin for date display -->
                 <p class="date-display"><?php echo date('l, F j, Y'); ?></p>
 
                 <h4>Present</h4>
@@ -153,8 +155,9 @@ $attendance_result = mysqli_query($conn, $attendance_sql);
                     </thead>
                     <tbody>
                         <?php
+                        // Loop to display present employees
                         while ($row = mysqli_fetch_assoc($attendance_result)) {
-                            if ($row['status'] == 'present') { // Show only present employees
+                            if ($row['status'] == 'present') {
                                 echo "<tr>
                                         <td>{$row['first_name']}</td>
                                         <td>{$row['check_in']}</td>
@@ -176,10 +179,10 @@ $attendance_result = mysqli_query($conn, $attendance_sql);
                     </thead>
                     <tbody>
                         <?php
-                        // Reset pointer and filter absent employees
+                        // Reset pointer and loop to display absent employees
                         mysqli_data_seek($attendance_result, 0);
                         while ($row = mysqli_fetch_assoc($attendance_result)) {
-                            if ($row['status'] == 'absent' || $row['status'] == null) { // Show only absent employees
+                            if ($row['status'] != 'present' && ($row['status'] == 'absent' || $row['status'] === null)) {
                                 echo "<tr>
                                         <td>{$row['first_name']}</td>
                                         <td><span class='status-icon offline'></span></td>
