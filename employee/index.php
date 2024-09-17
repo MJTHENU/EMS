@@ -4,8 +4,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Set the correct time zone
+date_default_timezone_set('Asia/Kolkata'); // Change this to your correct time zone
+
 // Include the database connection
 require_once('vendor/inc/connection.php'); 
+
+// Set MySQL time zone for the session
+mysqli_query($conn, "SET time_zone = '+05:30'"); // Set this to your correct time zone
+
 
 if (!isset($_SESSION['emp_id'])) {
     header("Location: emp-login.php");
