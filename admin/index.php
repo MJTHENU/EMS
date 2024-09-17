@@ -22,15 +22,9 @@ if (!isset($_SESSION['a_id'])) {
 $id = isset($_GET['a_id']) && !empty($_GET['a_id']) ? mysqli_real_escape_string($conn, $_GET['a_id']) : $_SESSION['a_id'];
 
 // Query to get employee information
-$sql1 = "SELECT * FROM admin WHERE a_id = '$id'";
+$sql1 = "SELECT * FROM `admin` WHERE a_id = '$id'";
 $result1 = mysqli_query($conn, $sql1);
 
-// Debugging: Check query execution
-if (!$result1) {
-    die('Query Error: ' . mysqli_error($conn));
-}
-
-// Check if data is fetched
 if (mysqli_num_rows($result1) > 0) {
     $employeen = mysqli_fetch_array($result1);
     $empName = $employeen['first_name'];
@@ -39,163 +33,145 @@ if (mysqli_num_rows($result1) > 0) {
     exit();
 }
 
-// Fetch "Present" and "Absent" lists for trainee (type 3)
-$attendance_sql_left_present = "
-    SELECT employee.emp_id, employee.first_name, attendance.check_in, attendance.status
-    FROM employee 
-    LEFT JOIN attendance ON employee.emp_id = attendance.emp_id
-    WHERE employee.type = 3 
-    AND attendance.status = 'present' 
-    AND attendance.att_date = CURDATE()
-    ORDER BY attendance.check_in DESC, employee.first_name";
-
-$attendance_sql_left_absent = "
-    SELECT employee.emp_id, employee.first_name
-    FROM employee 
+// Updated query to get both present and absent employees for type 2 (Employee) and type 3 (Trainee)
+$attendance_sql = "
+    SELECT employee.emp_id, employee.first_name, employee.type, attendance.check_in, attendance.status
+    FROM employee
     LEFT JOIN attendance ON employee.emp_id = attendance.emp_id AND attendance.att_date = CURDATE()
-    WHERE employee.type = 3 
-    AND (attendance.status IS NULL OR attendance.status != 'present')
-    AND employee.status = 'active'
-    ORDER BY employee.first_name";
+    WHERE employee.type IN (2, 3)
+    ORDER BY employee.type, attendance.check_in DESC, employee.first_name";
 
-$attendance_result_left_present = mysqli_query($conn, $attendance_sql_left_present);
-$attendance_result_left_absent = mysqli_query($conn, $attendance_sql_left_absent);
+// Execute the query
+$attendance_result = mysqli_query($conn, $attendance_sql);
 
-// Fetch "Present" and "Absent" lists for employee (type 2)
-$attendance_sql_right_present = "
-    SELECT employee.emp_id, employee.first_name, attendance.check_in, attendance.status
-    FROM employee 
-    LEFT JOIN attendance ON employee.emp_id = attendance.emp_id
-    WHERE employee.type = 2 
-    AND attendance.status = 'present' 
-    AND attendance.att_date = CURDATE()
-    ORDER BY attendance.check_in DESC, employee.first_name";
+// Initialize arrays to separate employees and trainees
+$employees = [];
+$trainees = [];
 
-$attendance_sql_right_absent = "
-    SELECT employee.emp_id, employee.first_name
-    FROM employee 
-    LEFT JOIN attendance ON employee.emp_id = attendance.emp_id AND attendance.att_date = CURDATE()
-    WHERE employee.type = 2 
-    AND (attendance.status IS NULL OR attendance.status != 'present')
-    AND employee.status = 'active'
-    ORDER BY employee.first_name";
-
-$attendance_result_right_present = mysqli_query($conn, $attendance_sql_right_present);
-$attendance_result_right_absent = mysqli_query($conn, $attendance_sql_right_absent);
-
-// Debugging: Check query execution for right (employee type 2)
-if (!$attendance_result_right_present || !$attendance_result_right_absent) {
-    die('Query Error: ' . mysqli_error($conn));
+// Categorize the data into employees and trainees
+while ($row = mysqli_fetch_assoc($attendance_result)) {
+    if ($row['type'] == 2) {
+        $employees[] = $row;
+    } elseif ($row['type'] == 3) {
+        $trainees[] = $row;
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <?php include('vendor/inc/head.php') ?>
-<link rel="stylesheet" href="vendor/css/index.css">
-<body>
-    <?php include('vendor/inc/nav.php') ?>
 
-    <!-- Center-aligned header section -->
+<link rel="stylesheet" href="vendor/css/index.css">
+    <body>
+        <?php include('vendor/inc/nav.php') ?>
+        
+        <!-- Center-aligned header section -->
     <div class="header-section">
         <h2>Today's Attendance Report</h2>
         <p class="date-display"><?php echo date('l, F j, Y'); ?></p>
     </div>
 
-    <div class="main">
-        <div class="left">
-            <h2>Trainees</h2><hr>
-            <h4>Present</h4>
-            <!-- Present table for trainees -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Login Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = mysqli_fetch_assoc($attendance_result_left_present)) {
-                        echo "<tr>
-                                <td>{$row['first_name']}</td>
-                                <td>{$row['check_in']}</td>
-                                <td><span class='status-icon online'></span></td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+        <div class="main">
+            <div class="left">
+                <h2>Trainee </h2>
 
-            <h4>Absent</h4>
-            <!-- Absent table for trainees -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = mysqli_fetch_assoc($attendance_result_left_absent)) {
-                        echo "<tr>
-                                <td>{$row['first_name']}</td>
-                                <td><span class='status-icon offline'></span></td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                <h4>Present</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Login Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($trainees as $row) {
+                            if ($row['status'] == 'present') {
+                                echo "<tr>
+                                        <td>{$row['first_name']}</td>
+                                        <td>{$row['check_in']}</td>
+                                        <td><span class='status-icon online'></span></td>
+                                      </tr>";
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
+                <h4>Absent</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($trainees as $row) {
+                            if ($row['status'] != 'present' || is_null($row['status'])) {
+                                echo "<tr>
+                                        <td>{$row['first_name']}</td>
+                                        <td><span class='status-icon offline'></span></td>
+                                      </tr>";
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="right">
+                <h2>Employee </h2>
+
+                <h4>Present</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Login Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($employees as $row) {
+                            if ($row['status'] == 'present') {
+                                echo "<tr>
+                                        <td>{$row['first_name']}</td>
+                                        <td>{$row['check_in']}</td>
+                                        <td><span class='status-icon online'></span></td>
+                                      </tr>";
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
+                <h4>Absent</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($employees as $row) {
+                            if ($row['status'] != 'present' || is_null($row['status'])) {
+                                echo "<tr>
+                                        <td>{$row['first_name']}</td>
+                                        <td><span class='status-icon offline'></span></td>
+                                      </tr>";
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <div class="right">
-            <h2>Employees</h2><hr>
-            <h4>Present</h4>
-            <!-- Present table for employees -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Login Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = mysqli_fetch_assoc($attendance_result_right_present)) {
-                        echo "<tr>
-                                <td>{$row['first_name']}</td>
-                                <td>{$row['check_in']}</td>
-                                <td><span class='status-icon online'></span></td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-
-            <h4>Absent</h4>
-            <!-- Absent table for employees -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = mysqli_fetch_assoc($attendance_result_right_absent)) {
-                        echo "<tr>
-                                <td>{$row['first_name']}</td>
-                                <td><span class='status-icon offline'></span></td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</body>
+    </body>
 </html>
