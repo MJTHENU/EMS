@@ -13,7 +13,6 @@ require_once('vendor/inc/connection.php');
 // Set MySQL time zone for the session
 mysqli_query($conn, "SET time_zone = '+05:30'"); // Set this to your correct time zone
 
-
 if (!isset($_SESSION['emp_id'])) {
     header("Location: emp-login.php");
     exit();
@@ -35,12 +34,12 @@ if (mysqli_num_rows($result1) > 0) {
     exit();
 }
 
-// Updated query to get both present and absent employees
+// Updated query to get both present and absent employees excluding inactive status
 $attendance_sql = "
-    SELECT employee.emp_id, employee.first_name, attendance.check_in, attendance.status
+    SELECT employee.emp_id, employee.first_name, employee.status AS emp_status, attendance.check_in, attendance.status AS att_status
     FROM employee
     LEFT JOIN attendance ON employee.emp_id = attendance.emp_id AND attendance.att_date = CURDATE()
-    WHERE employee.type = 2
+    WHERE employee.type = 2 AND employee.status != 'inactive'
     ORDER BY attendance.check_in DESC, employee.first_name";
 
 // Execute the query
@@ -164,7 +163,7 @@ $attendance_result = mysqli_query($conn, $attendance_sql);
                         <?php
                         // Loop to display present employees
                         while ($row = mysqli_fetch_assoc($attendance_result)) {
-                            if ($row['status'] == 'present') {
+                            if ($row['att_status'] == 'present') {
                                 echo "<tr>
                                         <td>{$row['first_name']}</td>
                                         <td>{$row['check_in']}</td>
@@ -189,7 +188,7 @@ $attendance_result = mysqli_query($conn, $attendance_sql);
                         // Reset pointer and loop to display absent employees
                         mysqli_data_seek($attendance_result, 0);
                         while ($row = mysqli_fetch_assoc($attendance_result)) {
-                            if ($row['status'] != 'present' && ($row['status'] == 'absent' || $row['status'] === null)) {
+                            if (($row['att_status'] != 'present' || $row['att_status'] === null)) {
                                 echo "<tr>
                                         <td>{$row['first_name']}</td>
                                         <td><span class='status-icon offline'></span></td>
