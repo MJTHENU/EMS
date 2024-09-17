@@ -4,8 +4,14 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Set the correct time zone
+date_default_timezone_set('Asia/Kolkata'); // Change this to your correct time zone
+
 // Include the database connection
 require_once('vendor/inc/connection.php'); 
+
+// Set MySQL time zone for the session
+mysqli_query($conn, "SET time_zone = '+05:30'"); // Set this to your correct time zone
 
 if (!isset($_SESSION['a_id'])) {
     header("Location: a-login.php");
@@ -90,13 +96,17 @@ if (!$attendance_result_right_present || !$attendance_result_right_absent) {
 <body>
     <?php include('vendor/inc/nav.php') ?>
 
+    <!-- Center-aligned header section -->
+    <div class="header-section">
+        <h2>Today's Attendance Report</h2>
+        <p class="date-display"><?php echo date('l, F j, Y'); ?></p>
+    </div>
+
     <div class="main">
         <div class="left">
-            <h2>Today's Trainee Attendance Report</h2>
-
-            <p class="date-display"><?php echo date('l, F j, Y'); ?></p>
-
+            <h2>Trainees</h2><hr>
             <h4>Present</h4>
+            <!-- Present table for trainees -->
             <table>
                 <thead>
                     <tr>
@@ -119,6 +129,7 @@ if (!$attendance_result_right_present || !$attendance_result_right_absent) {
             </table>
 
             <h4>Absent</h4>
+            <!-- Absent table for trainees -->
             <table>
                 <thead>
                     <tr>
@@ -140,11 +151,9 @@ if (!$attendance_result_right_present || !$attendance_result_right_absent) {
         </div>
 
         <div class="right">
-            <h2>Today's Employee Attendance Report</h2>
-
-            <p class="date-display"><?php echo date('l, F j, Y'); ?></p>
-
+            <h2>Employees</h2><hr>
             <h4>Present</h4>
+            <!-- Present table for employees -->
             <table>
                 <thead>
                     <tr>
@@ -167,6 +176,7 @@ if (!$attendance_result_right_present || !$attendance_result_right_absent) {
             </table>
 
             <h4>Absent</h4>
+            <!-- Absent table for employees -->
             <table>
                 <thead>
                     <tr>
