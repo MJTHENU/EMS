@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $acc_no = $_POST['acc_no'];
     $ifsc_code = $_POST['ifsc_code'];
     $branch_name = $_POST['branch_name'];
+    $status = $_POST['status'];
 
     if (isset($_FILES['passbook_img']) && $_FILES['passbook_img']['error'] == 0) {
         $passbook_img = file_get_contents($_FILES['passbook_img']['tmp_name']);
@@ -67,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $passbook_img_src = (!empty($employee['passbook_img'])) ? "data:image/jpeg;base64," . base64_encode($employee['passbook_img']) : 'path/to/placeholder/image.jpg';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include('vendor/inc/head.php') ?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="vendor/css/style.css?v=1.0">
     <link rel="stylesheet" href="vendor/css/bank-edit.css?v=1.0">
 </head>
@@ -79,48 +80,99 @@ $passbook_img_src = (!empty($employee['passbook_img'])) ? "data:image/jpeg;base6
     
 <?php include('vendor/inc/nav.php') ?>
 
-<div class="wrapper">
-    <h2>Edit Bank Details for Employee: <?php echo $employee['first_name'] . " " . $employee['last_name']; ?></h2>
-    
-    <form action="" method="POST" enctype="multipart/form-data">
-        <div class="input-group">
-            <label for="bank_holder_name">Account Holder Name</label>
-            <input type="text" id="bank_holder_name" name="bank_holder_name" value="<?php echo $employee['bank_holder_name']; ?>" class="input--style-1" required>
-        </div>
+<div class="page-wrapper">
+    <div class="wrapper">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h2">Edit Bank Details for Employee: <?php echo $employee['first_name'] . " " . $employee['last_name']; ?></h2>
+                <form action="" method="POST" enctype="multipart/form-data" class="bank-edit-form">
+                    <div class="row main">
+                        <div class="col left">
+                            <div class="custom-file-upload">
+                                <img src="<?php echo $passbook_img_src; ?>" alt="Passbook Image" class="passbook-img">
+                                <div class="camera-icon" onclick="document.getElementById('passbook-upload').click();">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                                <input type="file" id="passbook-upload" name="passbook_img" accept=".jpeg, .jpg, .png">
+                            </div>
 
-        <div class="input-group">
-            <label for="bank_name">Bank Name</label>
-            <input type="text" id="bank_name" name="bank_name" value="<?php echo $employee['bank_name']; ?>" class="input--style-1" required>
-        </div>
+                        </div>
+                        <div class="col right">
+                            <div class="input-group">
+                                <p>Account Holder Name</p>
+                                <input type="text" name="bank_holder_name" value="<?php echo $employee['bank_holder_name']; ?>" class="input--style-1" required>
+                            </div>
+                            <div class="input-group">
+                                <p>Bank Name</p>
+                                <input type="text" name="bank_name" value="<?php echo $employee['bank_name']; ?>" class="input--style-1" required>
+                            </div>
+                            <div class="input-group">
+                                <p>Account Number</p>
+                                <input type="text" name="acc_no" value="<?php echo $employee['acc_no']; ?>" class="input--style-1" required>
+                            </div>
+                            <div class="input-group">
+                                <p>IFSC Code</p>
+                                <input type="text" name="ifsc_code" value="<?php echo $employee['ifsc_code']; ?>" class="input--style-1" required>
+                            </div>
+                            <div class="input-group">
+                                <p>Branch Name</p>
+                                <input type="text" name="branch_name" value="<?php echo $employee['branch_name']; ?>" class="input--style-1" required>
+                            </div>
+                            <div class="input-group">
+                                <p>Status</p>
+                                <select name="status" class="input--style-1">
+                                    <option value="pending" <?php echo ($employee['status'] == 'pending' || empty($employee['status'])) ? 'selected' : ''; ?>>Pending</option>
+                                    <option value="approved" <?php echo ($employee['status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
+                                    <option value="cancelled" <?php echo ($employee['status'] == 'cancelled') ? 'selected' : ''; ?>>Cancelled</option>
+                                </select>
+                            </div>
 
-        <div class="input-group">
-            <label for="acc_no">Account Number</label>
-            <input type="text" id="acc_no" name="acc_no" value="<?php echo $employee['acc_no']; ?>" class="input--style-1" required>
+                            <div class="button-container">
+                                <button type="submit" class="btn btn--blue">Update Details</button>
+                                <a href="employee-list.php" class="btn btn--red">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="input-group">
-            <label for="ifsc_code">IFSC Code</label>
-            <input type="text" id="ifsc_code" name="ifsc_code" value="<?php echo $employee['ifsc_code']; ?>" class="input--style-1" required>
-        </div>
-
-        <div class="input-group">
-            <label for="branch_name">Branch Name</label>
-            <input type="text" id="branch_name" name="branch_name" value="<?php echo $employee['branch_name']; ?>" class="input--style-1" required>
-        </div>
-
-        <div class="input-group">
-            <label for="passbook_img">Bank Passbook Image</label>
-            <input type="file" id="passbook_img" name="passbook_img" class="input--style-1">
-            <img src="<?php echo $passbook_img_src; ?>" alt="Passbook Image" class="passbook-img">
-        </div>
-
-        <div class="button-container">
-            <button type="submit" class="btn btn--blue">Update Details</button>
-            <a href="employee-list.php" class="btn btn--red">Cancel</a>
-        </div>
-    </form>
+    </div>
 </div>
+<script>
+    // Trigger file input click when camera icon is clicked
+    document.querySelector(".camera-icon").addEventListener("click", function() {
+        document.getElementById("passbook-upload").click(); // Trigger file input click
+    });
 
-<!-- <?php include('vendor/inc/footer.php') ?> -->
+    // File input change event to handle validations
+    document.getElementById("passbook-upload").addEventListener("change", function() {
+        const file = this.files[0]; // Get the selected file
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']; // Allowed file types
+        
+        if (file) {
+            const fileType = file.type; // Get file type
+            const fileSizeInKB = file.size / 1024; // Convert file size to KB
+
+            // Validate file type
+            if (!allowedTypes.includes(fileType)) {
+                alert("Only JPEG, JPG, or PNG files are allowed.");
+                this.value = ""; // Clear the input
+                return;
+            }
+            
+            // Validate file size
+            if (fileSizeInKB < 300 || fileSizeInKB > 350) {
+                alert("File size must be between 300KB and 350KB.");
+                this.value = ""; // Clear the input
+                return;
+            }
+            
+            // If both validations pass, optionally display the file name
+            const fileName = file.name;
+            document.getElementById("file-chosen").textContent = fileName; // Show file name (optional)
+        }
+    });
+</script>
+
 </body>
 </html>

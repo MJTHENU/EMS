@@ -47,7 +47,8 @@ $result = mysqli_query($conn, $sql);
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #185575;
+            /* color: #185575; */
         }
 
         /* Styling for image hover */
@@ -117,7 +118,7 @@ $result = mysqli_query($conn, $sql);
             echo "<td>".ucfirst($status)."</td>";
 
             // Check the standardized status value and display appropriate buttons
-            if ($status == 'approved') {
+            if ($status == 'approved') {    
                 echo "<td>
                         <a class='edit' href='bank-edit.php?emp_id={$employee['emp_id']}&token={$employee['token']}'>Edit</a> | 
                         <a class='delete' href='bank-delete.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Delete the bank details?')\">Delete</a>
