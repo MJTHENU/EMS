@@ -81,8 +81,6 @@ $imageSrc = !empty($employee['img']) ? 'data:image/jpeg;base64,' . base64_encode
     <style>
         /* Additional styles for profile page */
         .image--cover {
-            max-width: 100px;
-            max-height: 100px;
             border-radius: 50%;
         }
         .input--style-1 {

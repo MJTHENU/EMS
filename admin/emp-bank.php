@@ -7,6 +7,7 @@ if (!isset($_SESSION['a_id'])) {
     exit();
 }
 
+// Fetch employee data
 $sql = "SELECT employee.emp_id, employee.first_name, employee.last_name, 
                employee_bank_details.passbook_img, employee_bank_details.bank_holder_name, 
                employee_bank_details.bank_name, employee_bank_details.acc_no, 
@@ -15,7 +16,6 @@ $sql = "SELECT employee.emp_id, employee.first_name, employee.last_name,
         FROM employee 
         INNER JOIN employee_bank_details 
         ON employee.emp_id = employee_bank_details.emp_id";
-
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -24,34 +24,74 @@ $result = mysqli_query($conn, $sql);
 <head>
     <?php include('vendor/inc/head.php') ?>
     <link rel="stylesheet" href="vendor/css/style.css?v=1.0">
+    <style>
+        /* Styling for the search bar */
+        #search-bar {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Styling for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Styling for image hover */
+        img:hover {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     
 <?php include('vendor/inc/nav.php') ?>
 
 <div id="divimg">
-    <table>
-        <tr>
-            <th>S No</th>
-            <th>Emp. ID</th>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Account Holder Name</th>
-            <th>Bank Name</th>
-            <th>Account Number</th>
-            <th>IFSC Code</th>
-            <th>Branch</th>
-            <th>Token</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-
+    <input type="text" id="search-bar" placeholder="Search by Emp ID or First Name" onkeyup="searchTable()">
+    <table id="employee-table">
+        <thead>
+            <tr>
+                <th>S No</th>
+                <th>Emp. ID</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Account Holder Name</th>
+                <th>Bank Name</th>
+                <th>Account Number</th>
+                <th>IFSC Code</th>
+                <th>Branch</th>
+                <th>Token</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
         <?php
         $sno = 1;
         while ($employee = mysqli_fetch_assoc($result)) {
-            // Convert binary data to base64
-            $passbook_img_data = base64_encode($employee['passbook_img']);
-            $passbook_img_src = "data:image/jpeg;base64,{$passbook_img_data}";
+            // Check if the image data is not empty
+            if (!empty($employee['passbook_img'])) {
+                // Convert binary data to base64
+                $passbook_img_data = base64_encode($employee['passbook_img']);
+                $passbook_img_src = "data:image/jpeg;base64,{$passbook_img_data}";
+            } else {
+                // Set a placeholder image if no data
+                $passbook_img_src = 'path/to/placeholder/image.jpg'; // Update with your placeholder image path
+            }
 
             // Standardize the status value (trim and convert to lowercase)
             $status = strtolower(trim($employee['status']));
@@ -60,7 +100,14 @@ $result = mysqli_query($conn, $sql);
             echo "<td>".$sno++."</td>";
             echo "<td>".$employee['emp_id']."</td>";
             echo "<td>".$employee['first_name']." ".$employee['last_name']."</td>";
-            echo "<td><img src='{$passbook_img_src}' alt='Passbook Image' style='width:100px; height:auto;'></td>";
+
+            // Add download functionality for the image
+            echo "<td>
+                    <a href='{$passbook_img_src}' download='{$employee['emp_id']}_{$employee['first_name']}.jpg'>
+                        <img src='{$passbook_img_src}' alt='Passbook Image' style='width:100px; height:auto;'>
+                    </a>
+                  </td>";
+
             echo "<td>".$employee['bank_holder_name']."</td>";
             echo "<td>".$employee['bank_name']."</td>";
             echo "<td>".$employee['acc_no']."</td>";
@@ -71,23 +118,45 @@ $result = mysqli_query($conn, $sql);
 
             // Check the standardized status value and display appropriate buttons
             if ($status == 'approved') {
-                // Show Edit and Delete buttons if status is approved
                 echo "<td>
                         <a class='edit' href='bank-edit.php?emp_id={$employee['emp_id']}&token={$employee['token']}'>Edit</a> | 
                         <a class='delete' href='bank-delete.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Delete the bank details?')\">Delete</a>
                       </td>";
             } else {
-                // Show Approve and Cancel buttons if status is not approved
                 echo "<td>
                         <a class='approve' href='bank-approve.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Approve the request?')\">Approve</a> | 
                         <a class='cancel' href='bank-cancel.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Cancel the request?')\">Cancel</a>
                       </td>";
             }
-            
             echo "</tr>";
         }
         ?>
+        </tbody>
     </table>
 </div>
+
+<script>
+    // Search function for filtering the table based on Emp ID or First Name
+    function searchTable() {
+        var input = document.getElementById("search-bar").value.toLowerCase();
+        var table = document.getElementById("employee-table");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 1; i < tr.length; i++) {
+            var tdEmpId = tr[i].getElementsByTagName("td")[1];
+            var tdName = tr[i].getElementsByTagName("td")[2];
+            if (tdEmpId || tdName) {
+                var empIdText = tdEmpId.textContent || tdEmpId.innerText;
+                var nameText = tdName.textContent || tdName.innerText;
+                if (empIdText.toLowerCase().indexOf(input) > -1 || nameText.toLowerCase().indexOf(input) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
 </body>
 </html>

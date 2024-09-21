@@ -80,6 +80,7 @@ while ($row = mysqli_fetch_assoc($attendance_result)) {
                 <table>
                     <thead>
                         <tr>
+                            <th>S.No</th>
                             <th>Name</th>
                             <th>Login Time</th>
                             <th>Status</th>
@@ -87,13 +88,16 @@ while ($row = mysqli_fetch_assoc($attendance_result)) {
                     </thead>
                     <tbody>
                         <?php
+                        $sno = 1; // Serial number counter
                         foreach ($trainees as $row) {
                             if ($row['att_status'] == 'present') {
                                 echo "<tr>
+                                        <td>{$sno}</td>
                                         <td>{$row['first_name']}</td>
                                         <td>{$row['check_in']}</td>
                                         <td><span class='status-icon online'></span></td>
                                       </tr>";
+                                $sno++;
                             }
                         }
                         ?>
@@ -104,18 +108,22 @@ while ($row = mysqli_fetch_assoc($attendance_result)) {
                 <table>
                     <thead>
                         <tr>
+                            <th>S.No</th>
                             <th>Name</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
+                        $sno = 1; // Reset the serial number counter for absent
                         foreach ($trainees as $row) {
                             if (($row['att_status'] != 'present' || is_null($row['att_status'])) && $row['status'] != 'inactive') {
                                 echo "<tr>
+                                        <td>{$sno}</td>
                                         <td>{$row['first_name']}</td>
                                         <td><span class='status-icon offline'></span></td>
                                       </tr>";
+                                $sno++;
                             }
                         }
                         ?>
@@ -130,6 +138,7 @@ while ($row = mysqli_fetch_assoc($attendance_result)) {
                 <table>
                     <thead>
                         <tr>
+                            <th>S.No</th>
                             <th>Name</th>
                             <th>Login Time</th>
                             <th>Status</th>
@@ -137,13 +146,16 @@ while ($row = mysqli_fetch_assoc($attendance_result)) {
                     </thead>
                     <tbody>
                         <?php
+                        $sno = 1; // Serial number counter
                         foreach ($employees as $row) {
                             if ($row['att_status'] == 'present') {
                                 echo "<tr>
+                                        <td>{$sno}</td>
                                         <td>{$row['first_name']}</td>
                                         <td>{$row['check_in']}</td>
                                         <td><span class='status-icon online'></span></td>
                                       </tr>";
+                                $sno++;
                             }
                         }
                         ?>
@@ -154,18 +166,22 @@ while ($row = mysqli_fetch_assoc($attendance_result)) {
                 <table>
                     <thead>
                         <tr>
+                            <th>S.No</th>
                             <th>Name</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
+                        $sno = 1; // Reset the serial number counter for absent
                         foreach ($employees as $row) {
                             if (($row['att_status'] != 'present' || is_null($row['att_status'])) && $row['status'] != 'inactive') {
                                 echo "<tr>
+                                        <td>{$sno}</td>
                                         <td>{$row['first_name']}</td>
                                         <td><span class='status-icon offline'></span></td>
                                       </tr>";
+                                $sno++;
                             }
                         }
                         ?>

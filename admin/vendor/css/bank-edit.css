@@ -1,0 +1,169 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+}
+
+.page-wrapper {
+    background-color: #f2f2f2;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+h2.h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group p {
+    margin: 0 0 5px;
+    font-weight: bold;
+}
+
+.input--style-1, select.input--style-1 {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+input.input--style-1 {
+    background-color: #f9f9f9;
+}
+
+select.input--style-1 {
+    background-color: #fff; /* Adjust background color for select */
+}
+
+/* Additional Styling for Select Element */
+select.input--style-1 {
+    appearance: none; /* Remove default arrow */
+    background-image: url('path/to/your/custom-arrow.png'); /* Custom arrow icon */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Adjust positioning */
+    background-size: 12px; /* Adjust size of custom arrow */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px;
+}
+
+.col {
+    flex: 1;
+    padding: 10px;
+}
+
+.passbook-img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+    margin-top: 20px; /* Space above the buttons */
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 30px; /* Oval shape */
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s; /* Transition for hover effect */
+}
+
+/* Blue Button */
+.btn--blue {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn--blue:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* Red Button */
+.btn--red {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn--red:hover {
+    background-color: #c82333;
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* Animation for Button Click */
+@keyframes button-click {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.95);
+    }
+}
+
+.btn:active {
+    animation: button-click 0.1s ease-out;
+}
+
+/* Error messages styling */
+.error-messages {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fdd;
+    border: 1px solid #f99;
+    border-radius: 4px;
+    color: #d8000c;
+}
+
+.error-messages p {
+    margin: 0;
+}
+
+/* File Input */
+input[type="file"] {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    color: #888;
+    font-size: 16px;
+}

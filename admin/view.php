@@ -67,11 +67,11 @@ if (!$employee_options_result) {
             <?php endforeach; ?>
         </datalist>
     </div>
-    <!-- <button class="add-emp">
+    <button class="add-emp">
         <a href="add-employee.php">
             <i class="fa-solid fa-plus"></i> Add Employee
         </a>
-    </button> -->
+    </button>
 </div>
 
 <div class="contain">
