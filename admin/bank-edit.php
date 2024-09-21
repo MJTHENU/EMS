@@ -52,12 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $update_sql = "UPDATE employee_bank_details 
-                   SET bank_holder_name = ?, bank_name = ?, acc_no = ?, ifsc_code = ?, branch_name = ?, passbook_img = ?
-                   WHERE emp_id = ? AND token = ?";
-    
-    $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bind_param("ssssssss", $bank_holder_name, $bank_name, $acc_no, $ifsc_code, $branch_name, $passbook_img, $emp_id, $token);
+               SET bank_holder_name = ?, bank_name = ?, acc_no = ?, ifsc_code = ?, branch_name = ?, passbook_img = ?, status = ?
+               WHERE emp_id = ? AND token = ?";
+               
+    $update_stmt = $conn->prepare($update_sql);    
 
+    $update_stmt->bind_param("sssssssss", $bank_holder_name, $bank_name, $acc_no, $ifsc_code, $branch_name, $passbook_img, $status, $emp_id, $token);
+
+    
     if ($update_stmt->execute()) {
         echo "Bank details updated successfully!";
         header("Location: emp-bank.php?success=1");
@@ -119,17 +121,18 @@ $passbook_img_src = (!empty($employee['passbook_img'])) ? "data:image/jpeg;base6
                                 <input type="text" name="branch_name" value="<?php echo $employee['branch_name']; ?>" class="input--style-1" required>
                             </div>
                             <div class="input-group">
-                                <p>Status</p>
-                                <select name="status" class="input--style-1">
-                                    <option value="pending" <?php echo ($employee['status'] == 'pending' || empty($employee['status'])) ? 'selected' : ''; ?>>Pending</option>
-                                    <option value="approved" <?php echo ($employee['status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
-                                    <option value="cancelled" <?php echo ($employee['status'] == 'cancelled') ? 'selected' : ''; ?>>Cancelled</option>
-                                </select>
-                            </div>
+    <p>Status</p>
+    <select name="status" class="input--style-1">
+        <option value="pending" <?php echo ($employee['status'] == 'pending' || empty($employee['status'])) ? 'selected' : ''; ?>>Pending</option>
+        <option value="approved" <?php echo ($employee['status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
+        <option value="cancelled" <?php echo ($employee['status'] == 'cancelled') ? 'selected' : ''; ?>>Cancelled</option>
+    </select>
+</div>
+
 
                             <div class="button-container">
                                 <button type="submit" class="btn btn--blue">Update Details</button>
-                                <a href="employee-list.php" class="btn btn--red">Cancel</a>
+                                <a href="emp-bank.php" class="btn btn--red">Cancel</a>
                             </div>
                         </div>
                     </div>

@@ -48,7 +48,8 @@ $firstDate = date("$year-$month-01");
 $lastDate = date("$year-$month-t");
 
 // Fetch employee names
-$sqlNames = "SELECT emp_id, first_name FROM employee WHERE type=2";
+// $sqlNames = "SELECT emp_id, first_name FROM employee WHERE type=2";
+$sqlNames = "SELECT emp_id, first_name FROM employee WHERE type = 2 AND status != 'inactive'";
 $resultNames = mysqli_query($conn, $sqlNames);
 $employees = array();
 while ($row = mysqli_fetch_assoc($resultNames)) {

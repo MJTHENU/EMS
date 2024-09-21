@@ -24,38 +24,9 @@ $result = mysqli_query($conn, $sql);
 <head>
     <?php include('vendor/inc/head.php') ?>
     <link rel="stylesheet" href="vendor/css/style.css?v=1.0">
-    <style>
-        /* Styling for the search bar */
-        #search-bar {
-            margin-bottom: 15px;
-            padding: 10px;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    <link rel="stylesheet" href="vendor/css/emp-bank.css?v=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* Styling for the table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #185575;
-            /* color: #185575; */
-        }
-
-        /* Styling for image hover */
-        img:hover {
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     
@@ -101,14 +72,11 @@ $result = mysqli_query($conn, $sql);
             echo "<td>".$sno++."</td>";
             echo "<td>".$employee['emp_id']."</td>";
             echo "<td>".$employee['first_name']." ".$employee['last_name']."</td>";
-
-            // Add download functionality for the image
             echo "<td>
                     <a href='{$passbook_img_src}' download='{$employee['emp_id']}_{$employee['first_name']}.jpg'>
                         <img src='{$passbook_img_src}' alt='Passbook Image' style='width:100px; height:auto;'>
                     </a>
                   </td>";
-
             echo "<td>".$employee['bank_holder_name']."</td>";
             echo "<td>".$employee['bank_name']."</td>";
             echo "<td>".$employee['acc_no']."</td>";
@@ -116,20 +84,22 @@ $result = mysqli_query($conn, $sql);
             echo "<td>".$employee['branch_name']."</td>";
             echo "<td>".$employee['token']."</td>";
             echo "<td>".ucfirst($status)."</td>";
-
-            // Check the standardized status value and display appropriate buttons
-            if ($status == 'approved') {    
-                echo "<td>
-                        <a class='edit' href='bank-edit.php?emp_id={$employee['emp_id']}&token={$employee['token']}'>Edit</a> | 
-                        <a class='delete' href='bank-delete.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Delete the bank details?')\">Delete</a>
-                      </td>";
-            } else {
-                echo "<td>
-                        <a class='approve' href='bank-approve.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Approve the request?')\">Approve</a> | 
-                        <a class='cancel' href='bank-cancel.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Cancel the request?')\">Cancel</a>
-                      </td>";
+            
+            // Actions section
+            echo "<td>";
+            if ($status == 'pending') {
+                echo "<a class='approve' href='bank-approve.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Approve the request?')\">Approve</a>  
+                      <a class='cancel' href='bank-cancel.php?emp_id={$employee['emp_id']}&token={$employee['token']}' onClick=\"return confirm('Are you sure you want to Cancel the request?')\">Cancel</a>";
+            } elseif ($status == 'approved') {
+                echo "<a class='edit' href='bank-edit.php?emp_id={$employee['emp_id']}&token={$employee['token']}'>Edit</a> 
+                      <a class='delete' href='bank-delete.php?emp_id={$employee['emp_id']}&token={$employee['token']}' 
+      onClick=\"return confirm('Are you sure you want to cancel the bank details for Emp ID: {$employee['emp_id']} ({$employee['first_name']})?')\">Delete</a>";
+            } elseif ($status == 'cancelled') {
+                echo "<span>Cancelled</span>";
             }
+            echo "</td>";
             echo "</tr>";
+            
         }
         ?>
         </tbody>

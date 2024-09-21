@@ -47,8 +47,8 @@ $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 $firstDate = date("$year-$month-01");
 $lastDate = date("$year-$month-t");
 
-// Fetch employee names
-$sqlNames = "SELECT emp_id, first_name FROM employee";
+// Fetch employee names (only active employees)
+$sqlNames = "SELECT emp_id, first_name FROM employee WHERE status != 'inactive'";
 $resultNames = mysqli_query($conn, $sqlNames);
 $employees = array();
 while ($row = mysqli_fetch_assoc($resultNames)) {
@@ -56,18 +56,22 @@ while ($row = mysqli_fetch_assoc($resultNames)) {
 }
 
 // Fetch attendance data for the current month
-$sqlAttendance = "SELECT emp_id, att_date, status FROM attendance WHERE att_date BETWEEN ? AND ?";
-$stmtAttendance = $conn->prepare($sqlAttendance);
-$stmtAttendance->bind_param("ss", $firstDate, $lastDate);
-$stmtAttendance->execute();
-$stmtAttendance->bind_result($emp_id, $att_date, $status);
+if (!empty($employees)) {
+    $empIds = "'" . implode("', '", array_keys($employees)) . "'"; // Properly format the IDs
+    $sqlAttendance = "SELECT emp_id, att_date, status FROM attendance WHERE att_date BETWEEN ? AND ? AND emp_id IN ($empIds)";
+    
+    $stmtAttendance = $conn->prepare($sqlAttendance);
+    $stmtAttendance->bind_param("ss", $firstDate, $lastDate);
+    $stmtAttendance->execute();
+    $stmtAttendance->bind_result($emp_id, $att_date, $status);
 
-// Organize attendance data into a 2D array
-$attendanceData = array();
-while ($stmtAttendance->fetch()) {
-    $attendanceData[$emp_id][$att_date] = $status;
+    // Organize attendance data into a 2D array
+    $attendanceData = array();
+    while ($stmtAttendance->fetch()) {
+        $attendanceData[$emp_id][$att_date] = $status;
+    }
+    $stmtAttendance->close();
 }
-$stmtAttendance->close();
 
 // Fetch holiday dates from the database
 $sqlHolidays = "SELECT holiday_date FROM holidays";
@@ -76,8 +80,6 @@ $holidays = array();
 while ($row = mysqli_fetch_assoc($resultHolidays)) {
     $holidays[] = $row['holiday_date'];
 }
-
-$date1 = date('t');
 ?>
 
 <!DOCTYPE html>
@@ -136,38 +138,40 @@ $date1 = date('t');
 
             <?php
             $counter = 1;
-            foreach ($employees as $emp_id => $emp_name): ?>
-                <tr>
-                    <td><?php echo $counter++; ?></td>
-                    <td><?php echo $emp_name; ?></td>
-                    <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
-                        <td>
-                            <?php
-                            $date = date("Y-m-d", strtotime("$year-$month-$day"));
-                            if (isset($attendanceData[$emp_id][$date])) {
-                                $status = $attendanceData[$emp_id][$date];
-                                if ($status == 'present') {
-                                    echo '<i class="fa fa-check green" aria-hidden="true"></i>';
-                                } else {
-                                    echo '<i class="fa fa-times red" aria-hidden="true"></i>';
-                                }
-                            } elseif (in_array($date, $holidays)) {
-                                echo '<span style="color: red;">Holiday</span>';
-                            } else {
-                                echo '-';
-                            }
-                            ?>
-                        </td>
-                    <?php endfor; ?>
-                    <td>
-                        <button>
-                            <a class="view-attendance" href="view-attendance.php?emp_id=<?php echo $emp_id ?>&month=<?php echo $month ?>&year=<?php echo $year ?>">
-                                <i class="fa fa-eye"></i> 
-                            </a>
-                        </button>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+            // Display attendance table
+foreach ($employees as $emp_id => $emp_name): ?>
+    <tr>
+        <td><?php echo $counter++; ?></td>
+        <td><?php echo $emp_name; ?></td>
+        <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
+            <td>
+                <?php
+                $date = date("Y-m-d", strtotime("$year-$month-$day"));
+                if (isset($attendanceData[$emp_id][$date])) {
+                    $status = $attendanceData[$emp_id][$date];
+                    if ($status == 'present') {
+                        echo '<i class="fa fa-check green" aria-hidden="true"></i>';
+                    } else {
+                        echo '<i class="fa fa-times red" aria-hidden="true"></i>';
+                    }
+                } elseif (in_array($date, $holidays)) {
+                    echo '<span style="color: red;">Holiday</span>';
+                } else {
+                    echo '-';
+                }
+                ?>
+            </td>
+        <?php endfor; ?>
+        <td>
+            <button>
+                <a class="view-attendance" href="view-attendance.php?emp_id=<?php echo $emp_id ?>&month=<?php echo $month ?>&year=<?php echo $year ?>">
+                    <i class="fa fa-eye"></i> 
+                </a>
+            </button>
+        </td>
+    </tr>
+<?php endforeach; ?>
+
         </table>
     </div>
     <div style="text-align: center; margin-bottom: 20px;">
