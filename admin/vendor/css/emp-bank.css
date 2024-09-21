@@ -1,0 +1,138 @@
+/* Search input styles */
+#search-bar {
+    width: 60%; /* Full width */
+    padding: 10px; /* Padding inside the input */
+    margin: 20px 0; /* Margin above and below */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 15px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for effects */
+}
+
+/* Hover effect */
+#search-bar:hover {
+    border-color: #2d3ed8; /* Darker border on hover */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+}
+
+/* Focus effect */
+#search-bar:focus {
+    outline: none; /* Remove default outline */
+    border-color: #007BFF; /* Change border color when focused */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* Glow effect on focus */
+}
+
+#employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+#employee-table th,
+#employee-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Header styles */
+#employee-table th {
+    background-color: #185575;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* General button styles */
+.approve, .cancel, .edit, .delete {
+    display: inline-block; /* Allow padding and margins */
+    padding: 10px 15px; /* Vertical and horizontal padding */
+    font-size: 18px; /* Font size */
+    color: #fff; /* Text color */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+    margin: 5px; /* Margin around the buttons */
+    width: 80%;
+    text-align: center;
+}
+
+/* Button colors */
+.approve { background-color: #28a745; }
+.cancel { background-color: #dc3545; }
+.edit { background-color: #007bff; }
+.delete { background-color: #6c757d; }
+
+/* Hover effects */
+.approve:hover { background-color: #218838; transform: translateY(-2px); }
+.cancel:hover { background-color: #c82333; transform: translateY(-2px); }
+.edit:hover { background-color: #0056b3; transform: translateY(-2px); }
+.delete:hover { background-color: #5a6268; transform: translateY(-2px); }
+
+/* Write animation */
+@keyframes writeAnimation {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Apply animation to table rows */
+#employee-table tbody tr {
+    animation: writeAnimation 0.5s ease forwards;
+}
+
+/* Scale effect on hover */
+#employee-table tbody tr:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+}
+
+/* Cell hover effect */
+#employee-table th:hover,
+#employee-table td:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.02);
+}
+
+/* Row transition effect */
+#employee-table tbody tr {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    #employee-table {
+        font-size: 14px;
+    }
+
+    #employee-table th,
+    #employee-table td {
+        padding: 10px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    #employee-table {
+        font-size: 12px;
+    }
+
+    #employee-table th,
+    #employee-table td {
+        padding: 8px 6px;
+    }
+}
+
+/* Single row button styles for devices above 768px */
+@media (min-width: 769px) {
+    .button-container {
+        display: flex; /* Use flexbox for horizontal layout */
+        justify-content: flex-start; /* Align buttons to the left */
+        flex-wrap: wrap; /* Wrap if necessary */
+    }
+
+    .approve, .cancel, .edit, .delete {
+        flex: 1; /* Allow buttons to grow */
+        max-width: 150px; /* Set a max width for each button */
+    }
+}
