@@ -93,7 +93,40 @@ require_once('vendor/inc/connection.php');
 </div>
 
 <script>
-    function validateFile() {
+//     function validateFile() {
+//     var passbookImage = document.getElementById('passbook_img');
+//     var allowedExtensions = /(\.jpeg|\.jpg|\.png)$/i;
+//     var file = passbookImage.files[0];
+//     var minSize = 300 * 1024; // 300 KB
+//     var maxSize = 500 * 1024; // 500 KB
+
+//     // Clear previous error messages
+//     document.getElementById("error-passbook-img").textContent = '';
+
+//     if (file) {
+//         // Validate file type
+//         if (!allowedExtensions.exec(file.name)) {
+//             showError("error-passbook-img", "Only .jpeg, .jpg, and .png files are allowed.");
+//             passbookImage.value = ''; // Clear the input
+//             return false;
+//         }
+
+//         // Validate file size
+//         if (file.size <= minSize) {
+//             showError("error-passbook-img", "File size must be at least 300 KB.");
+//             passbookImage.value = ''; // Clear the input
+//             return false;
+//         }
+
+//         if (file.size => maxSize) {
+//             showError("error-passbook-img", "File size must not exceed 500 KB.");
+//             passbookImage.value = ''; // Clear the input
+//             return false;
+//         }
+//     }
+//     return true;
+// }
+function validateFile() {
     var passbookImage = document.getElementById('passbook_img');
     var allowedExtensions = /(\.jpeg|\.jpg|\.png)$/i;
     var file = passbookImage.files[0];
@@ -108,24 +141,34 @@ require_once('vendor/inc/connection.php');
         if (!allowedExtensions.exec(file.name)) {
             showError("error-passbook-img", "Only .jpeg, .jpg, and .png files are allowed.");
             passbookImage.value = ''; // Clear the input
+            document.getElementById('placeholder-text').textContent = 'Bank Passbook FrontPage Upload';
             return false;
         }
 
         // Validate file size
-        if (file.size < minSize) {
+        if (file.size <= minSize) {
             showError("error-passbook-img", "File size must be at least 300 KB.");
             passbookImage.value = ''; // Clear the input
+            document.getElementById('placeholder-text').textContent = 'Bank Passbook FrontPage Upload';
             return false;
         }
 
-        if (file.size > maxSize) {
+        if (file.size >= maxSize) {
             showError("error-passbook-img", "File size must not exceed 500 KB.");
             passbookImage.value = ''; // Clear the input
+            document.getElementById('placeholder-text').textContent = 'Bank Passbook FrontPage Upload';
             return false;
         }
+
+        // Show the selected file name
+        document.getElementById('placeholder-text').textContent = file.name;
+    } else {
+        // Reset the placeholder text if no file is selected
+        document.getElementById('placeholder-text').textContent = 'Bank Passbook FrontPage Upload';
     }
     return true;
 }
+
 
 
     function validateForm() {
