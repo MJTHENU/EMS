@@ -44,107 +44,65 @@ $attendance_sql = "
 
 // Execute the query
 $attendance_result = mysqli_query($conn, $attendance_sql);
+// Fetch ongoing projects
+$project_sql = "
+    SELECT project.project_id, project.p_name, project.p_lead, project.`desc`, project.start_date, project.end_date, project.status, project.priority
+    FROM `project`
+    JOIN `employee` ON project.p_lead = employee.emp_id
+    WHERE project.`status` = 'In Progress' AND employee.emp_id = '$id'
+";
+
+
+
+$project_result = mysqli_query($conn, $project_sql);
 ?>
 
 <!DOCTYPE html>
 <html>
 <?php include('vendor/inc/head.php') ?>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        .main {
-            display: flex;
-            margin: 20px;
-        }
-
-        .left {
-            flex: 1;
-            padding: 20px;
-            background-color: #ffffff;
-            border-right: 1px solid #ddd;
-        }
-
-        .right {
-            flex: 2;
-            padding: 20px;
-            background-color: lightblue;
-        }
-        /* Center-align the date display */
-        .date-display {
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            font-size: 22px;
-            background-color: #0223f7;
-            color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        h2, h4 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
-            color: black;
-            font-weight: bold;
-        }
-
-        .status-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .online {
-            background-color: green;
-        }
-
-        .offline {
-            background-color: red;
-        }
-
-        /* Animation styles */
-        tbody tr {
-            transition: transform 0.3s, background-color 0.3s;
-        }
-
-        tbody tr:hover {
-            transform: scale(1.02);
-            background-color: #f0f8ff;
-        }
-    </style>
+<link rel ="stylesheet" href = "vendor/css/index.css?v=1.0">
+   
     <body>
         <?php include('vendor/inc/nav.php') ?>
 
         <div class="main">
             <div class="left">
-                <!-- Left side content goes here -->
+                <h2>Project Status</h2>
+                <?php
+                if (mysqli_num_rows($project_result) > 0) {
+                    echo "<table>
+                            <thead>
+                                <tr>
+                                    <th>Project ID</th>
+                                    <th>Project Name</th>
+                                    <th>Project Lead</th>
+                                    <th>Description</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+                    while ($project = mysqli_fetch_assoc($project_result)) {
+                        echo "<tr>
+                                <td>{$project['project_id']}</td>
+                                <td>{$project['p_name']}</td>
+                                <td>{$project['p_lead']}</td>
+                                <td>{$project['desc']}</td>
+                                <td>{$project['start_date']}</td>
+                                <td>{$project['end_date']}</td>
+                                <td>{$project['status']}</td>
+                                <td>{$project['priority']}</td>
+                            </tr>";
+                    }
+                    echo "</tbody></table>";
+                } else {
+                    echo "<p>No ongoing projects found.</p>";
+                }
+                ?>
             </div>
+
             <div class="right">
                 <h2>Today's Attendance Report</h2>
 
