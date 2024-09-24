@@ -66,8 +66,12 @@ require_once('vendor/inc/connection.php');
                         <input class="input--style-1" type="text" placeholder="Account Number" name="acc_no" id="acc_no">
                         <span id="error-account-number" class="error"></span>
                     </div>
-                    <div class="input-group">
+                    <!-- <div class="input-group">
                         <input class="input--style-1" type="text" placeholder="IFSC Code" name="ifsc_code" id="ifsc_code">
+                        <span id="error-ifsc-code" class="error"></span>
+                    </div> -->
+                    <div class="input-group">
+                        <input class="input--style-1" type="text" placeholder="IFSC Code" name="ifsc_code" id="ifsc_code" onpaste="return false;" oncopy="return false;">
                         <span id="error-ifsc-code" class="error"></span>
                     </div>
                     <div class="input-group">
