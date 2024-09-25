@@ -45,12 +45,22 @@ $attendance_sql = "
 // Execute the query
 $attendance_result = mysqli_query($conn, $attendance_sql);
 // Fetch ongoing projects
+// $project_sql = "
+//     SELECT project.project_id, project.p_name, project.p_lead, project.`desc`, project.start_date, project.end_date, project.status, project.priority
+//     FROM `project`
+//     JOIN `employee` ON project.p_lead = employee.emp_id
+//     WHERE project.`status` = 'In Progress' AND employee.emp_id = '$id'
+// ";
 $project_sql = "
-    SELECT project.project_id, project.p_name, project.p_lead, project.`desc`, project.start_date, project.end_date, project.status, project.priority
+    SELECT project.project_id, project.p_name, 
+           CONCAT(employee.emp_id, ' - ', employee.first_name) AS p_lead, 
+           project.`desc`, project.start_date, project.end_date, 
+           project.status, project.priority
     FROM `project`
     JOIN `employee` ON project.p_lead = employee.emp_id
     WHERE project.`status` = 'In Progress' AND employee.emp_id = '$id'
 ";
+
 
 
 
@@ -66,9 +76,10 @@ $project_result = mysqli_query($conn, $project_sql);
         <?php include('vendor/inc/nav.php') ?>
 
         <div class="main">
-            <div class="left">
-                <h2>Project Status</h2>
-                <?php
+        <div class="left">
+        <h2>Project Status</h2>
+        <div class="table-wrapper">
+            <?php
                 if (mysqli_num_rows($project_result) > 0) {
                     echo "<table>
                             <thead>
@@ -100,8 +111,10 @@ $project_result = mysqli_query($conn, $project_sql);
                 } else {
                     echo "<p>No ongoing projects found.</p>";
                 }
-                ?>
-            </div>
+            ?>
+        </div>
+    </div>
+
 
             <div class="right">
                 <h2>Today's Attendance Report</h2>
