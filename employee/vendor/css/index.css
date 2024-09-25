@@ -1,0 +1,191 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f5f5f5;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Main container for layout */
+.main {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+/* Left and right sections styling */
+.left, .right {
+    padding: 20px;
+    background-color: lightblue;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Specific styling for the left container */
+.left {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+/* Wrapper for the table to enable scrolling */
+.left .table-wrapper { 
+    max-height: 400px; 
+    overflow-y: auto; 
+    position: relative; /* Changed to relative */
+    margin-top: 20px; /* Optional: Add some margin to separate from the header */
+    padding: 10px; /* Optional: Add some padding for aesthetics */
+    /* background-color: white;  */
+    border-radius: 8px; /* Optional: Round the corners */
+    /* border: 1px solid #ddd; */
+}
+
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Table header and cell styling */
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+    color: black;
+    font-weight: bold;
+    position: sticky;
+    top: 0; /* Ensure the table header is sticky */
+}
+
+/* Date display styling */
+.date-display {
+    text-align: center;
+    margin: 20px 0;
+    padding: 10px;
+    font-size: 22px;
+    background-color: #0223f7;
+    color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Headings */
+h2, h4 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Status icons */
+.status-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.online {
+    background-color: green;
+}
+
+.offline {
+    background-color: red;
+}
+
+/* Animation styles for table rows */
+tbody tr {
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    animation: fadeInRows 0.5s ease-in-out; /* Fade-in animation for rows */
+}
+
+tbody tr:hover {
+    transform: scale(1.02);
+    background-color: #f0f8ff;
+}
+
+/* Media queries for responsiveness */
+@media (min-width: 768px) {
+    .main {
+        flex-direction: row;
+    }
+
+    .left {
+        flex: 1;
+        border-right: 1px solid #ddd;
+        margin-right: 10px;
+        margin-bottom: 0;
+    }
+
+    .right {
+        flex: 2;
+        margin-left: 10px;
+        margin-bottom: 0;
+    }
+}
+
+/* Responsive typography for smaller devices */
+@media (max-width: 600px) {
+    .date-display {
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    h2, h4 {
+        font-size: 20px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}
+
+/* Adjust for even smaller screens */
+@media (max-width: 400px) {
+    .date-display {
+        font-size: 16px;
+        padding: 6px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+}
+
+/* Fade-in animation for the entire body */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Table rows fade-in animation */
+@keyframes fadeInRows {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
