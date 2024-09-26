@@ -1,0 +1,113 @@
+/* General reset and basic styling */
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+}
+
+/* Payslip container styling */
+.payslip {
+    width: 600px;
+    background: white;
+    margin: 50px auto;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.header {
+    display: flex; /* Use flexbox to align children horizontally */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Spread the items across the header */
+    padding: 10px; /* Add some padding around the content */
+    border-bottom: 2px solid #00487C; /* Style the bottom border */
+}
+
+.header img {
+    height: 60px; /* Adjust the logo size */
+    margin-right: 20px; /* Space between logo and address */
+}
+
+.address {
+    text-align: right; /* Align the text of the address to the right */
+    flex-grow: 1; /* Allow the address block to take up the remaining space */
+}
+
+
+.header div h1 {
+    margin: 0;
+    color: #00487C;
+}
+
+.header div p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #333;
+}
+.month {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 600px;
+}
+
+
+/* Employee info section styling */
+.employee-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.employee-info div {
+    flex: 1;
+}
+
+.employee-info p {
+    margin: 4px 0;
+    font-size: 0.9em;
+}
+
+.employee-info span {
+    font-weight: bold;
+}
+
+/* Salary details table styling */
+.salary-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.salary-details th,
+.salary-details td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.salary-details th {
+    background-color: #f0f0f0;
+}
+
+/* Net pay row styling */
+.net-pay-row td {
+    font-weight: bold;
+    color: #0056b3;
+    font-size: 1.1em;
+}
+
+/* Signature area styling */
+.signature {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.signature div {
+    border-top: 1px solid #666;
+    width: 200px;
+    align-self: center;
+    padding-top: 5px;
+    font-size: 0.9em;
+}

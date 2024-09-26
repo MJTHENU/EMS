@@ -273,6 +273,7 @@ $stmt6->close();
                 <button type="submit" name="update">Check Out</button>
             </form>
             <button class="view-button" onclick="location.href='view-attendance.php'">View Attendance</button>
+            <button class="view-button" onclick="location.href='salary-slip.php'">Salary Slip</button>
             <?php } ?>
         </div>
 
