@@ -71,10 +71,10 @@ if (!isset($_SESSION['emp_id'])) {
     exit();
 }
 
-// Handle attendance recording
+// Function to handle attendance recording
 if (isset($_POST['submit'])) {
     $emp_id = $_SESSION['emp_id'];
-    $att_date = date('Y-m-d');
+    $att_date = date('Y-m-d'); // Attendance date in Y-m-d format
     $current_time = date('H:i:s'); // Get the current time
 
     // Determine the greeting message based on the current time
@@ -88,7 +88,6 @@ if (isset($_POST['submit'])) {
         exit;
     }
 
-    // Continue processing if the time is valid
     echo "<script>alert('$greeting');</script>";
 
     // Check if the user has already submitted attendance for the current date
@@ -97,7 +96,8 @@ if (isset($_POST['submit'])) {
     if (!$existingRecord) {
         // Get status from the form
         $status = $_POST['status']; // Retrieve the status from the form
-        $check_in = ($status == 'present') ? $_POST['check_in'] : null;
+        // Store check_in with full datetime format
+        $check_in = ($status == 'present') ? date('Y-m-d H:i:s', strtotime($_POST['check_in'])) : null;
         $check_out = null; // For initial submission, set check_out to null
         $total_hours = $_POST['total_hours'];
 
@@ -120,49 +120,59 @@ if (isset($_POST['submit'])) {
     }
 }
 
-
-// Handle attendance update (Check Out)
+// After fetching the existing attendance record, modify the check-out handling
 if (isset($_POST['update'])) {
     $emp_id = $_SESSION['emp_id'];
+    // Store check_out with full datetime format
+    $check_out_time = date('Y-m-d H:i:s', strtotime($_POST['check_out']));
     $today = date('Y-m-d');
-    $check_out_time = date('H:i:s'); // Get current time for checkout
 
-    $sql3 = "SELECT * FROM attendance WHERE emp_id = '$emp_id' AND att_date = '$today'";
-    $result3 = mysqli_query($conn, $sql3);
+    $sql3 = "SELECT * FROM attendance WHERE emp_id = ? AND att_date = ?";
+    $stmt3 = $conn->prepare($sql3);
+    $stmt3->bind_param("ss", $emp_id, $today);
+    $stmt3->execute();
+    $result3 = $stmt3->get_result();
 
     if ($result3 && mysqli_num_rows($result3) > 0) {
         $row = mysqli_fetch_assoc($result3);
         $check_in = $row['check_in'];
-        $check_out = $check_out_time;
+        $existing_check_out = $row['check_out']; // Check if check_out already exists
 
-        // Calculate the time difference in hours
-        $starttime = strtotime($check_in);
-        $endtime = strtotime($check_out);
-        $diff = $endtime - $starttime;
-        $hours = $diff / 3600; // Convert seconds to hours
-        $total_hours = round($hours, 2); // Round to 2 decimal places for display
-
-        if ($hours < 1) {
-            echo "<script>alert('Error: Please contact HR/Admin.');</script>";
+        if (!empty($existing_check_out)) {
+            echo "<script>alert('Error: You have already checked out today.');</script>";
         } else {
-            // Update attendance with check-out and total hours
-            $sql4 = "UPDATE attendance SET check_out = '$check_out', total_hours = '$total_hours' WHERE emp_id = '$emp_id' AND att_date = '$today'";
-            mysqli_query($conn, $sql4);
+            // Calculate time difference in hours
+            $starttime = strtotime($check_in);
+            $endtime = strtotime($check_out_time);
+            $diff = $endtime - $starttime;
+            $hours = $diff / 3600; // Convert seconds to hours
 
-            // Update employee status to 'inactive' after checkout
-            $status_update_query = "UPDATE employee SET status = 'inactive' WHERE emp_id = '$emp_id'";
-            mysqli_query($conn, $status_update_query);
+            if ($hours < 1) {
+                echo "<script>alert('Error: Check-out time must be at least one hour after check-in.');</script>";
+            } elseif ($hours < 7) {
+                echo "<script>alert('Today marked as Half Day Leave.');</script>";
+            } else {
+                // Proceed with updating check_out
+                $t_hours = gmdate("H:i:s", $hours * 3600);
+                $sql4 = "UPDATE attendance SET check_out = ?, total_hours = ? WHERE emp_id = ? AND att_date = ?";
+                $stmt4 = $conn->prepare($sql4);
+                $stmt4->bind_param("ssss", $check_out_time, $t_hours, $emp_id, $today);
+                $stmt4->execute();
+                $stmt4->close();
 
-            // Alert and display total hours using JavaScript
-            echo "<script>
-                    alert('Total Working Hours: $total_hours');
-                    document.getElementById('checkout_button').style.display = 'none';
-                  </script>";
+                // Update the status in the employee table
+                $status_update_query = "UPDATE employee SET status = 'inactive' WHERE emp_id = ?";
+                $stmt5 = $conn->prepare($status_update_query);
+                $stmt5->bind_param("s", $emp_id);
+                $stmt5->execute();
+                $stmt5->close();
+            }
         }
     } else {
-        echo "<script>alert('No attendance record found for today.');</script>";
+        echo "<script>alert('Cannot update. No attendance submitted for today.');</script>";
     }
 }
+
 
 
 // Display the total hours
@@ -270,21 +280,14 @@ $stmt6->close();
             </script>
 
             <?php } else { ?>
-            <!-- User has already checked in, display check-out form -->
-            <!-- <form class="attform1" method="post" action="">
-                <label for="check_out">Check Out</label>
-                <input type="datetime-local" class="input--style-1 check_out" name="check_out" id="check_out" value="<?php echo date('Y-m-d\TH:i'); ?>" readonly required>
-                <?php if (isset($error['check_out'])) echo "<span class='error'>* " . $error['check_out'] . "</span>" ?>
-
-                <button type="submit" name="update">Check Out</button>
-            </form> -->
+            
             <form class="attform1" method="post" action="">
                 <label for="check_out">Check Out</label>
-                <input type="datetime-local" class="input--style-1 check_out" name="check_out" id="check_out" value="<?php echo date('Y-m-d\TH:i'); ?>" readonly required>
-                <button type="submit" name="update" id="checkout_button">Check Out</button>
+                <input type="datetime-local" class="input--style-1 check_out" name="check_out" id="check_out" value="<?php echo date('Y-m-d\TH:i'); ?>" required>
+                <?php if (isset($error['check_out'])) echo "<span class='error'>* " . $error['check_out'] . "</span>" ?>
+                <button type="submit" name="update" id="checkOutButton">Check Out</button>
             </form>
             <button class="view-button" onclick="location.href='view-attendance.php'">View Attendance</button>
-            <button class="view-button" onclick="location.href='salary-slip.php'">Salary Slip</button>
             <?php } ?>
         </div>
 
@@ -344,11 +347,5 @@ $stmt6->close();
         </div>
     </div>
     <!-- <?php include('vendor/inc/footer.php'); ?> -->
-    <script>
-// Check out button will be hidden after successful checkout
-function hideCheckoutButton() {
-    document.getElementById('checkout_button').style.display = 'none';
-}
-</script>
 </body>
 </html>
