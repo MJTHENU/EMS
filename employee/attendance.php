@@ -121,10 +121,11 @@ if (isset($_POST['submit'])) {
 }
 
 
-// Handle attendance update
+// Handle attendance update (Check Out)
 if (isset($_POST['update'])) {
     $emp_id = $_SESSION['emp_id'];
     $today = date('Y-m-d');
+    $check_out_time = date('H:i:s'); // Get current time for checkout
 
     $sql3 = "SELECT * FROM attendance WHERE emp_id = '$emp_id' AND att_date = '$today'";
     $result3 = mysqli_query($conn, $sql3);
@@ -132,32 +133,37 @@ if (isset($_POST['update'])) {
     if ($result3 && mysqli_num_rows($result3) > 0) {
         $row = mysqli_fetch_assoc($result3);
         $check_in = $row['check_in'];
-        $check_out = $_POST['check_out'];
+        $check_out = $check_out_time;
 
-        // Calculate time difference in hours
+        // Calculate the time difference in hours
         $starttime = strtotime($check_in);
         $endtime = strtotime($check_out);
         $diff = $endtime - $starttime;
         $hours = $diff / 3600; // Convert seconds to hours
+        $total_hours = round($hours, 2); // Round to 2 decimal places for display
 
         if ($hours < 1) {
-            echo "<script>alert('Error: Please Contact To HR/Admin');</script>";
-        } elseif ($hours < 7) {
-            echo "<script>alert('Today Half Day Leave');</script>";
+            echo "<script>alert('Error: Please contact HR/Admin.');</script>";
         } else {
-            // Proceed with update
-            $t_hours = gmdate("H:i:s", $hours * 3600);
-            $sql4 = "UPDATE attendance SET check_out = '$check_out', total_hours = '$t_hours' WHERE emp_id = '$emp_id' AND att_date = '$today'";
+            // Update attendance with check-out and total hours
+            $sql4 = "UPDATE attendance SET check_out = '$check_out', total_hours = '$total_hours' WHERE emp_id = '$emp_id' AND att_date = '$today'";
             mysqli_query($conn, $sql4);
 
-            // Update the status in the employee table
+            // Update employee status to 'inactive' after checkout
             $status_update_query = "UPDATE employee SET status = 'inactive' WHERE emp_id = '$emp_id'";
             mysqli_query($conn, $status_update_query);
+
+            // Alert and display total hours using JavaScript
+            echo "<script>
+                    alert('Total Working Hours: $total_hours');
+                    document.getElementById('checkout_button').style.display = 'none';
+                  </script>";
         }
     } else {
-        $error['check_out'] = "Cannot update. No attendance submitted for today.";
+        echo "<script>alert('No attendance record found for today.');</script>";
     }
 }
+
 
 // Display the total hours
 echo "$t_hours";
@@ -265,12 +271,17 @@ $stmt6->close();
 
             <?php } else { ?>
             <!-- User has already checked in, display check-out form -->
-            <form class="attform1" method="post" action="">
+            <!-- <form class="attform1" method="post" action="">
                 <label for="check_out">Check Out</label>
                 <input type="datetime-local" class="input--style-1 check_out" name="check_out" id="check_out" value="<?php echo date('Y-m-d\TH:i'); ?>" readonly required>
                 <?php if (isset($error['check_out'])) echo "<span class='error'>* " . $error['check_out'] . "</span>" ?>
 
                 <button type="submit" name="update">Check Out</button>
+            </form> -->
+            <form class="attform1" method="post" action="">
+                <label for="check_out">Check Out</label>
+                <input type="datetime-local" class="input--style-1 check_out" name="check_out" id="check_out" value="<?php echo date('Y-m-d\TH:i'); ?>" readonly required>
+                <button type="submit" name="update" id="checkout_button">Check Out</button>
             </form>
             <button class="view-button" onclick="location.href='view-attendance.php'">View Attendance</button>
             <button class="view-button" onclick="location.href='salary-slip.php'">Salary Slip</button>
@@ -333,5 +344,11 @@ $stmt6->close();
         </div>
     </div>
     <!-- <?php include('vendor/inc/footer.php'); ?> -->
+    <script>
+// Check out button will be hidden after successful checkout
+function hideCheckoutButton() {
+    document.getElementById('checkout_button').style.display = 'none';
+}
+</script>
 </body>
 </html>
